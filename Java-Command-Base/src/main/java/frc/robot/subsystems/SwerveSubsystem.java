@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -59,7 +60,7 @@ public class SwerveSubsystem extends SubsystemBase {
                     frontRight.getPosition(),
                     backLeft.getPosition(),
                     backRight.getPosition()
-            }, new Pose2d(5.0, 13.5, new Rotation2d()));
+            }, new Pose2d(0.0, 0.0, new Rotation2d(0)));
 
     public SwerveSubsystem() {
         new Thread(() -> {
@@ -76,6 +77,8 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getHeading() {
+      SmartDashboard.putNumber("Gyro Abs", gyro.getAngle());
+      SmartDashboard.putNumber("Gyro Remain", Math.IEEEremainder(gyro.getAngle(), 360));
         return Math.IEEEremainder(gyro.getAngle(), 360);
     }
 

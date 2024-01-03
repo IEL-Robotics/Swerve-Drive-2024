@@ -22,6 +22,7 @@ import frc.robot.Constants.SwerveConstants.ModuleConstants;
 import frc.robot.Constants.SwerveConstants.DriveConstants;
 public class SwerveModule {
 
+    private final int driveMotorId;
     private final CANSparkMax driveMotor,turningMotor;
     private final RelativeEncoder driveEnc,turningEnc;
     private final PIDController pidCont;
@@ -34,6 +35,7 @@ public class SwerveModule {
     public SwerveModule(int driveMotorId,int turningMotorId,boolean driveMotorReversed,boolean turningMotorReversed,
     int absoluteEncoderId, double absoluteEncoderOffset,boolean absoluteEncoderReversed){
 
+        this.driveMotorId = driveMotorId;
         this.absEncOffsetRad = absoluteEncoderOffset;
         this.reversedAbsEnc = absoluteEncoderReversed;
         absEnc = new AnalogInput(absoluteEncoderId);
@@ -105,10 +107,12 @@ public class SwerveModule {
 
     public void setState(SwerveModuleState state){
 
-        if (Math.abs(state.speedMetersPerSecond)<0.05){
+        if (Math.abs(state.speedMetersPerSecond)<0.25){
             stop();
             return;
         }
+
+        SmartDashboard.putNumber(String.format("Encoder %d", driveMotorId), dcEnc.getAbsolutePosition());
         state=SwerveModuleState.optimize(state, getState().angle);
         this.driveMotor.set(state.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         this.turningMotor.set(this.pidCont.calculate(this.getTurningPosition(),state.angle.getRadians()));

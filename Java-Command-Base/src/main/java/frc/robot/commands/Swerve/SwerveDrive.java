@@ -63,14 +63,16 @@ public class SwerveDrive extends CommandBase {
         turningSpeed = rotLimiter.calculate(turningSpeed) * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
         ChassisSpeeds chassisSpeeds;
-        if (fieldOrientedFunction.get()) {
-            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                     xSpeed, ySpeed, turningSpeed, swerveSubsystem.getRotation2d());
+        chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+              xSpeed, ySpeed, turningSpeed, swerveSubsystem.getRotation2d());
+        // if (fieldOrientedFunction.get()) {
+        //     chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+        //              xSpeed, ySpeed, turningSpeed, swerveSubsystem.getRotation2d());
             
-            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
-        } else {
-            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
-        }
+        //     chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+        // } else {
+        //     chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+        // }
 
         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
