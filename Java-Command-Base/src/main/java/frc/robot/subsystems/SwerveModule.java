@@ -5,6 +5,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
+
+import java.io.Console;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
@@ -23,24 +26,26 @@ import frc.robot.Constants.SwerveConstants.DriveConstants;
 public class SwerveModule {
 
     private final int driveMotorId;
-    private final CANSparkMax driveMotor,turningMotor;
+    public final CANSparkMax driveMotor,turningMotor;
     private final RelativeEncoder driveEnc,turningEnc;
     private final PIDController pidCont;
-    private final AnalogInput absEnc;
-
-    private final DutyCycleEncoder dcEnc;
+    
+    public final DutyCycleEncoder dcEnc;
     private final boolean reversedAbsEnc;
     private final double absEncOffsetRad;
 
+    private final String moduleName;
+
     public SwerveModule(int driveMotorId,int turningMotorId,boolean driveMotorReversed,boolean turningMotorReversed,
-    int absoluteEncoderId, double absoluteEncoderOffset,boolean absoluteEncoderReversed){
+    int absoluteEncoderId, double absoluteEncoderOffset,boolean absoluteEncoderReversed, String moduleName){
 
         this.driveMotorId = driveMotorId;
         this.absEncOffsetRad = absoluteEncoderOffset;
         this.reversedAbsEnc = absoluteEncoderReversed;
-        absEnc = new AnalogInput(absoluteEncoderId);
 
         dcEnc = new DutyCycleEncoder(absoluteEncoderId);
+
+        dcEnc.setDutyCycleRange(1.0/4096.0, 4095.0/4096.0);
 
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
         turningMotor = new CANSparkMax(turningMotorId, MotorType.kBrushless);
@@ -53,33 +58,43 @@ public class SwerveModule {
 
         driveEnc.setPositionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter);
         driveEnc.setVelocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec);
-        turningEnc.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad);
-        turningEnc.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
+        //turningEnc.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad);
+        turningEnc.setPositionConversionFactor(0.2929938434314728);
+        //turningEnc.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
+        turningEnc.setVelocityConversionFactor(0.005018123109638691);    
 
-        pidCont = new PIDController(ModuleConstants.kPTurning, 0, 0);
+        pidCont = new PIDController(0.5, 0.01, 0.00);
         pidCont.enableContinuousInput(-Math.PI, Math.PI);
-        this.resetEnc();
+        resetEnc();
 
+        this.moduleName = moduleName;
+
+        //*************************************************************************************** */  
+        prevAbsPos = getAbsEncRad() - absEncOffsetRad;
+        currentAbsPos = getAbsEncRad() - absEncOffsetRad;
+        currentRelativePosition = getAbsEncRad() - absEncOffsetRad;
+        coefficient = 0;
     }
 
     public double getDrivePosition(){
-        return this.driveEnc.getPosition();
+        return driveEnc.getPosition();
     }
 
     public double getTurningPosition(){
-        return this.turningEnc.getPosition();
+        // return turningEnc.getPosition();
+        return sayacFinalVals();
     }
 
     public SwerveModulePosition getPosition(){
-        return new SwerveModulePosition(this.getDrivePosition(),new Rotation2d(this.getTurningPosition()));  
+        return new SwerveModulePosition(getDrivePosition(),new Rotation2d(getTurningPosition()));  
     }
 
     public double getDriveVelocity(){
-        return this.driveEnc.getVelocity();
+        return driveEnc.getVelocity();
     }
 
     public double getTurningVelocity(){
-        return this.driveEnc.getVelocity();
+        return driveEnc.getVelocity();
     }
 
     public double getAbsEncRad(){
@@ -92,35 +107,73 @@ public class SwerveModule {
         // else return ang;
 
         return dcEnc.getAbsolutePosition() * 2 * Math.PI - Math.PI;
-
-
     }
 
     public void resetEnc(){
         driveEnc.setPosition(0);
-        turningEnc.setPosition(this.getAbsEncRad());
+        turningEnc.setPosition(getAbsEncRad() - absEncOffsetRad);
     }
 
     public SwerveModuleState getState(){
-        return new SwerveModuleState(this.getDrivePosition(),new Rotation2d(this.getTurningPosition()));
+        return new SwerveModuleState(getDrivePosition(), new Rotation2d(getTurningPosition()));
     }
 
     public void setState(SwerveModuleState state){
 
-        if (Math.abs(state.speedMetersPerSecond)<0.25){
+        if (Math.abs(state.speedMetersPerSecond)<0.5){
             stop();
             return;
         }
 
-        SmartDashboard.putNumber(String.format("Encoder %d", driveMotorId), dcEnc.getAbsolutePosition());
         state=SwerveModuleState.optimize(state, getState().angle);
-        this.driveMotor.set(state.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        this.turningMotor.set(this.pidCont.calculate(this.getTurningPosition(),state.angle.getRadians()));
+        driveMotor.set(state.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        turningMotor.set(pidCont.calculate(getTurningPosition(), state.angle.getRadians()));
+
+        //SmartDashboard.putNumber(String.format("%s TurnPos", moduleName), getTurningPosition());
+        SmartDashboard.putNumber(String.format("%s St.gR", moduleName), state.angle.getRadians());
+        // SmartDashboard.putNumber(String.format("%s pidOut", moduleName), pidCont.calculate(getTurningPosition(), state.angle.getRadians()));
     }
 
     public void stop(){
-        this.driveMotor.set(0);
-        this.turningMotor.set(0);
+        driveMotor.set(0);
+        turningMotor.set(0);
+    }
+
+    //*********************************************************************************************** */
+
+    public double prevAbsPos, currentAbsPos;
+    public int coefficient;
+    public double currentRelativePosition;
+
+    public int sayacCatchSwitch() {
+      int diff = 0;
+      if((prevAbsPos < -2.5) && (currentAbsPos > 2.5)){diff = -1;}
+      if((prevAbsPos > 2.5) && (currentAbsPos < -2.5)){diff = +1;}
+      return diff;
+    }
+
+    public void sayacDisplay() {
+      System.out.println("duzenli");
+      SmartDashboard.putNumber(String.format("%s SayacVal", moduleName), currentAbsPos);
+      SmartDashboard.putNumber(String.format("%s Coef", moduleName), coefficient);
+      SmartDashboard.putNumber(String.format("%s DesiredVal", moduleName), 2*Math.PI*coefficient + currentAbsPos);
+    }
+
+    public double sayacFinalVals() {
+      return 2*Math.PI*coefficient + currentAbsPos;
+    }
+
+    public void sayacUpdate() {
+      prevAbsPos = currentAbsPos;
+      System.out.println("updateLog");
+      currentAbsPos = getAbsEncRad() - absEncOffsetRad;      
+    }
+    
+    public void sayacExecute() {
+      sayacUpdate();
+      System.out.println("LOGGG");
+      coefficient += sayacCatchSwitch();
+      sayacDisplay();
     }
 
 }

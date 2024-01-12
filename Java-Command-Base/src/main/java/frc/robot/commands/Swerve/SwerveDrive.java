@@ -49,9 +49,9 @@ public class SwerveDrive extends CommandBase {
         double ySpeed = ySpdFunction.get();
         double turningSpeed = turningSpdFunction.get();
 
-        SmartDashboard.putNumber("xSPD", xSpeed);
-        SmartDashboard.putNumber("ySPD", ySpeed);
-        SmartDashboard.putNumber("turnSPD", turningSpeed);
+        // SmartDashboard.putNumber("xSPD", xSpeed);
+        // SmartDashboard.putNumber("ySPD", ySpeed);
+        // SmartDashboard.putNumber("turnSPD", turningSpeed);
 
         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
         ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
@@ -77,6 +77,8 @@ public class SwerveDrive extends CommandBase {
         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
         swerveSubsystem.setModuleStates(moduleStates);
+        System.out.println("Command Log");
+        swerveSubsystem.updateSayac();
     }
     @Override
     public void end(boolean interrupted) {

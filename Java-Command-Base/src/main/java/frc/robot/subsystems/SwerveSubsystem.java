@@ -18,41 +18,45 @@ import frc.robot.Constants.SwerveConstants.DriveConstants;
 import frc.robot.subsystems.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
-    private final SwerveModule frontLeft = new SwerveModule(
+    public final SwerveModule frontLeft = new SwerveModule(
             DriveConstants.kFrontLeftDriveMotorPort,
             DriveConstants.kFrontLeftTurningMotorPort,
             DriveConstants.kFrontLeftDriveEncoderReversed,
             DriveConstants.kFrontLeftTurningEncoderReversed,
             DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
             DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
+            DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed,
+            "Sol On");
 
-    private final SwerveModule frontRight = new SwerveModule(
+    public final SwerveModule frontRight = new SwerveModule(
             DriveConstants.kFrontRightDriveMotorPort,
             DriveConstants.kFrontRightTurningMotorPort,
             DriveConstants.kFrontRightDriveEncoderReversed,
             DriveConstants.kFrontRightTurningEncoderReversed,
             DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
             DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
+            DriveConstants.kFrontRightDriveAbsoluteEncoderReversed,
+            "Sag On");
 
-    private final SwerveModule backLeft = new SwerveModule(
+    public final SwerveModule backLeft = new SwerveModule(
             DriveConstants.kBackLeftDriveMotorPort,
             DriveConstants.kBackLeftTurningMotorPort,
             DriveConstants.kBackLeftDriveEncoderReversed,
             DriveConstants.kBackLeftTurningEncoderReversed,
             DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
             DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kBackLeftDriveAbsoluteEncoderReversed);
+            DriveConstants.kBackLeftDriveAbsoluteEncoderReversed,
+            "Sol Arka");
 
-    private final SwerveModule backRight = new SwerveModule(
+    public final SwerveModule backRight = new SwerveModule(
             DriveConstants.kBackRightDriveMotorPort,
             DriveConstants.kBackRightTurningMotorPort,
             DriveConstants.kBackRightDriveEncoderReversed,
             DriveConstants.kBackRightTurningEncoderReversed,
             DriveConstants.kBackRightDriveAbsoluteEncoderPort,
             DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
+            DriveConstants.kBackRightDriveAbsoluteEncoderReversed,
+            "Sag Arka");
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
             new Rotation2d(0), new SwerveModulePosition[] {
@@ -77,9 +81,9 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getHeading() {
-      SmartDashboard.putNumber("Gyro Abs", gyro.getAngle());
-      SmartDashboard.putNumber("Gyro Remain", Math.IEEEremainder(gyro.getAngle(), 360));
-        return Math.IEEEremainder(gyro.getAngle(), 360);
+      // SmartDashboard.putNumber("Gyro Abs", gyro.getAngle());
+      // SmartDashboard.putNumber("Gyro Remain", Math.IEEEremainder(gyro.getAngle(), 360));
+        return -Math.IEEEremainder(gyro.getAngle(), 360);
     }
 
     public Rotation2d getRotation2d() {
@@ -108,9 +112,30 @@ public class SwerveSubsystem extends SubsystemBase {
     }
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        frontLeft.setState(desiredStates[0]);
-        frontRight.setState(desiredStates[1]);
-        backLeft.setState(desiredStates[2]);
-        backRight.setState(desiredStates[3]);
+        frontLeft.setState(desiredStates[1]);
+        frontRight.setState(desiredStates[0]);
+        backLeft.setState(desiredStates[3]);
+        backRight.setState(desiredStates[2]);
+    }
+
+    public void allValuesDisplay() {
+      SmartDashboard.putNumber("LF Encoder", frontLeft.getAbsEncRad());
+      SmartDashboard.putNumber("LB Encoder",  backLeft.getAbsEncRad());
+      SmartDashboard.putNumber("RF Encoder",  frontRight.getAbsEncRad());
+      SmartDashboard.putNumber("RB Encoder",  backRight.getAbsEncRad());
+
+      //SmartDashboard.putNumber("RF Moduler", frontRight.getTurningPosition() % (Math.PI));
+
+      SmartDashboard.putNumber("LF getTurn", frontLeft.getTurningPosition());
+      SmartDashboard.putNumber("LB getTurn",  backLeft.getTurningPosition());
+      SmartDashboard.putNumber("RF getTurn",  frontRight.getTurningPosition());
+      SmartDashboard.putNumber("RB getTurn",  backRight.getTurningPosition());
+    }
+
+    public void updateSayac() {
+      frontRight.sayacExecute();
+      frontLeft.sayacExecute();
+      backLeft.sayacExecute();
+      backRight.sayacExecute();
     }
 }
