@@ -27,8 +27,8 @@ public class SwerveModule {
 
     private final int driveMotorId;
     public final CANSparkMax driveMotor,turningMotor;
-    private final RelativeEncoder driveEnc,turningEnc;
-    private final PIDController pidCont;
+    public final RelativeEncoder driveEnc,turningEnc;
+    public final PIDController pidCont;
     
     public final DutyCycleEncoder dcEnc;
     private final boolean reversedAbsEnc;

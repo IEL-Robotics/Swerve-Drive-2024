@@ -18,6 +18,7 @@ import frc.robot.Constants.SwerveConstants.DriveConstants;
 import frc.robot.subsystems.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
+    public boolean isFollow=false;
     public final SwerveModule frontLeft = new SwerveModule(
             DriveConstants.kFrontLeftDriveMotorPort,
             DriveConstants.kFrontLeftTurningMotorPort,
@@ -137,5 +138,25 @@ public class SwerveSubsystem extends SubsystemBase {
       frontLeft.sayacExecute();
       backLeft.sayacExecute();
       backRight.sayacExecute();
+    }
+    public double[] getDriveEncoderPosition(){
+        return new double[] {
+            frontRight.getDrivePosition(),
+
+            frontLeft.getDrivePosition(),
+
+            backRight.getDrivePosition(),
+
+            backLeft.getDrivePosition()
+        };
+    }
+    public void activateFollow(){
+        this.backLeft.driveMotor.follow(
+            this.frontLeft.driveMotor
+        );
+        this.backRight.driveMotor.follow(
+            this.frontRight.driveMotor
+        );
+        this.isFollow=true;
     }
 }
