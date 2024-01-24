@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -9,15 +11,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.geometry.Pose2d;
-
-import com.kauailabs.navx.frc.AHRS;
-
 import frc.robot.Constants.SwerveConstants.DriveConstants;
-import frc.robot.subsystems.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
+
     public final SwerveModule frontLeft = new SwerveModule(
             DriveConstants.kFrontLeftDriveMotorPort,
             DriveConstants.kFrontLeftTurningMotorPort,
@@ -57,14 +54,20 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
             DriveConstants.kBackRightDriveAbsoluteEncoderReversed,
             "Sag Arka");
+
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
-    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
-            new Rotation2d(0), new SwerveModulePosition[] {
-                    frontLeft.getPosition(),
-                    frontRight.getPosition(),
-                    backLeft.getPosition(),
-                    backRight.getPosition()
-            }, new Pose2d(0.0, 0.0, new Rotation2d(0)));
+
+    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(
+        DriveConstants.kDriveKinematics,
+        new Rotation2d(0),
+        new SwerveModulePosition[] { //Teleopta endeksler farkli oldugundan, burada da farkli sirayla mi koymaliyiz?
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition()
+        }, 
+        new Pose2d(0.0, 0.0, new Rotation2d(0)) //AprilTag ile belirlemek? resetPosition() Metodu -> resetOdometry var zaten
+    );
 
     public SwerveSubsystem() {
         new Thread(() -> {
@@ -81,8 +84,6 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getHeading() {
-      // SmartDashboard.putNumber("Gyro Abs", gyro.getAngle());
-      // SmartDashboard.putNumber("Gyro Remain", Math.IEEEremainder(gyro.getAngle(), 360));
         return -Math.IEEEremainder(gyro.getAngle(), 360);
     }
 
@@ -102,14 +103,29 @@ public class SwerveSubsystem extends SubsystemBase {
                 backRight.getPosition()
         },pose);
     }
+
     @Override
-    public void periodic(){}
+    public void periodic(){
+        //odometer.update(getRotation2d(), frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
+       
+        odometer.update(getRotation2d(), //Siralama konusundaki endise burada da gecerli
+                        new SwerveModulePosition[] {
+                            frontLeft.getPosition(),
+                            frontRight.getPosition(), 
+                            backLeft.getPosition(), 
+                            backRight.getPosition()
+                });
+
+        SmartDashboard.putString("Konum", getPose().getTranslation().toString());
+    }
+
     public void stopModules() {
         frontLeft.stop();
         frontRight.stop();
         backLeft.stop();
         backRight.stop();
     }
+
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         frontLeft.setState(desiredStates[1]);
@@ -123,8 +139,6 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("LB Encoder",  backLeft.getAbsEncRad());
       SmartDashboard.putNumber("RF Encoder",  frontRight.getAbsEncRad());
       SmartDashboard.putNumber("RB Encoder",  backRight.getAbsEncRad());
-
-      //SmartDashboard.putNumber("RF Moduler", frontRight.getTurningPosition() % (Math.PI));
 
       SmartDashboard.putNumber("LF getTurn", frontLeft.getTurningPosition());
       SmartDashboard.putNumber("LB getTurn",  backLeft.getTurningPosition());

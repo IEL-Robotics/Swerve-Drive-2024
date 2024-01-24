@@ -1,19 +1,28 @@
 package frc.robot;
 
+import java.util.List;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.SwerveConstants.AutoConstants;
+import frc.robot.Constants.SwerveConstants.DriveConstants;
 import frc.robot.Constants.SwerveConstants.OIConstants;
 import frc.robot.commands.Swerve.ResetEncoder;
-import frc.robot.commands.Swerve.SetSpecificPos;
 import frc.robot.commands.Swerve.SwerveDrive;
 import frc.robot.subsystems.SwerveSubsystem;
-import edu.wpi.first.wpilibj.PS4Controller;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
@@ -29,20 +38,12 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-        //new JoystickButton(m_driverController, 2).whenActive(() -> swerveSubsystem.zeroHeading());
         new JoystickButton(m_driverController, 2).onTrue(m_ResetEncoder);
-        // new JoystickButton(m_driverController, 4).onTrue(new ParallelCommandGroup( new SetSpecificPos(swerveSubsystem.frontRight, 0.25, 0),
-        // new SetSpecificPos(swerveSubsystem.backRight, 0.25, -1.5),
-        // new SetSpecificPos(swerveSubsystem.frontLeft, 0.25, 1))); //problematic, 0 -> 3.14
-  }
-
-  public Command getAutonomousCommand() {
-    return null;
   }
 
   public Command getTeleopCommand() {
     
-    double betaAngle = ((Math.atan2(-(m_driverController.getRawAxis(0)),(m_driverController.getRawAxis(1)))));
+    //double betaAngle = ((Math.atan2(-(m_driverController.getRawAxis(0)),(m_driverController.getRawAxis(1)))));
     
     return new SwerveDrive(
         swerveSubsystem,
@@ -52,23 +53,38 @@ public class RobotContainer {
         () -> !(m_driverController.getL2Axis()>0.5)
     );
 
-    // double[] offsets = {1, 0.2, -1.5};
-    // return new SetSpecificPos(
-    //   swerveSubsystem,
-    //   swerveSubsystem.frontLeft,
-    //   swerveSubsystem.frontRight,
-    //   swerveSubsystem.backRight,
-    //   () -> m_driverController.getRawAxis(0),
-    //   () -> - m_driverController.getRawAxis(1),
-    //   offsets);
-}
+  }
+
+  public Command getAutonomousCommand() {
+
+    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared).setKinematics(DriveConstants.kDriveKinematics);
+    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+                            new Pose2d(0, 0, new Rotation2d(0)),
+                            List.of(
+                              new Translation2d(1, 0),
+                              new Translation2d(1, -1)
+                            ),
+                            new Pose2d(2, -1, Rotation2d.fromDegrees(0)),
+                            trajectoryConfig);
+    PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+    PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+    ProfiledPIDController thetaController = new ProfiledPIDController(
+                          AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+      trajectory, swerveSubsystem::getPose, DriveConstants.kDriveKinematics, xController, yController, thetaController,
+      swerveSubsystem::setModuleStates, swerveSubsystem);
+
+    return new SequentialCommandGroup(
+      new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
+      swerveControllerCommand,
+      new InstantCommand(() -> swerveSubsystem.stopModules())
+    );
+  }
 
   public void allValuesDisplay() {
     swerveSubsystem.allValuesDisplay();
-    
     double betaAngle = ((Math.atan2(-(m_driverController.getRawAxis(0)),(m_driverController.getRawAxis(1)))));
-    SmartDashboard.putNumber("Beta as Degree", betaAngle);
-    // SmartDashboard.putNumber("Y", m_driverController.getRawAxis(1));
-    // SmartDashboard.putNumber("X", m_driverController.getRawAxis(0));
   }
 }

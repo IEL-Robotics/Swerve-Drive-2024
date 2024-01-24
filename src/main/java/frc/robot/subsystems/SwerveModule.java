@@ -3,26 +3,16 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
-
-import java.io.Console;
-
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.SwerveConstants.ModuleConstants;
 import frc.robot.Constants.SwerveConstants.DriveConstants;
+import frc.robot.Constants.SwerveConstants.ModuleConstants;
 public class SwerveModule {
 
     private final int driveMotorId;
@@ -47,9 +37,9 @@ public class SwerveModule {
 
         dcEnc.setDutyCycleRange(1.0/4096.0, 4095.0/4096.0);
 
-        driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
-        turningMotor = new CANSparkMax(turningMotorId, MotorType.kBrushless);
-
+        driveMotor = new CANSparkMax(driveMotorId, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
+        turningMotor = new CANSparkMax(driveMotorId, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
+        
         turningMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kBrake);
         driveMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kBrake);
 
@@ -61,10 +51,11 @@ public class SwerveModule {
 
         driveEnc.setPositionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter);
         driveEnc.setVelocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec);
+
         //turningEnc.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad);
-        turningEnc.setPositionConversionFactor(0.2929938434314728);
-        //turningEnc.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
-        turningEnc.setVelocityConversionFactor(0.005018123109638691);    
+        // turningEnc.setPositionConversionFactor(0.2929938434314728);
+        // //turningEnc.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
+        // turningEnc.setVelocityConversionFactor(0.005018123109638691);    
 
         pidCont = new PIDController(0.5, 0.01, 0.00);
         pidCont.enableContinuousInput(-Math.PI, Math.PI);
@@ -89,7 +80,7 @@ public class SwerveModule {
     }
 
     public SwerveModulePosition getPosition(){
-        return new SwerveModulePosition(getDrivePosition(),new Rotation2d(getTurningPosition()));  
+        return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurningPosition()));  
     }
 
     public double getDriveVelocity(){
@@ -101,14 +92,6 @@ public class SwerveModule {
     }
 
     public double getAbsEncRad(){
-        // turningMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.fromId(0)); //Belki?
-
-        // double ang=this.absEnc.getVoltage()/RobotController.getVoltage5V();
-        // ang*=Math.PI*2;
-        // ang-=this.absEncOffsetRad;
-        // if(this.reversedAbsEnc) return -ang;
-        // else return ang;
-
         return dcEnc.getAbsolutePosition() * 2 * Math.PI - Math.PI;
     }
 
@@ -131,10 +114,6 @@ public class SwerveModule {
         state=SwerveModuleState.optimize(state, getState().angle);
         driveMotor.set(state.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turningMotor.set(pidCont.calculate(getTurningPosition(), state.angle.getRadians()));
-
-        //SmartDashboard.putNumber(String.format("%s TurnPos", moduleName), getTurningPosition());
-        SmartDashboard.putNumber(String.format("%s St.gR", moduleName), state.angle.getRadians());
-        // SmartDashboard.putNumber(String.format("%s pidOut", moduleName), pidCont.calculate(getTurningPosition(), state.angle.getRadians()));
     }
 
     public void stop(){
@@ -156,7 +135,6 @@ public class SwerveModule {
     }
 
     public void sayacDisplay() {
-      System.out.println("duzenli");
       SmartDashboard.putNumber(String.format("%s SayacVal", moduleName), currentAbsPos);
       SmartDashboard.putNumber(String.format("%s Coef", moduleName), coefficient);
       SmartDashboard.putNumber(String.format("%s DesiredVal", moduleName), 2*Math.PI*coefficient + currentAbsPos);
@@ -168,15 +146,12 @@ public class SwerveModule {
 
     public void sayacUpdate() {
       prevAbsPos = currentAbsPos;
-      System.out.println("updateLog");
       currentAbsPos = getAbsEncRad() - absEncOffsetRad;      
     }
     
     public void sayacExecute() {
       sayacUpdate();
-      System.out.println("LOGGG");
       coefficient += sayacCatchSwitch();
-      sayacDisplay();
     }
 
 }

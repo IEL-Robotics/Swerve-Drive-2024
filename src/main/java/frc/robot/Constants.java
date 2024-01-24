@@ -61,10 +61,10 @@ public final class Constants {
         public static final double kTrackWidth = 0.62;
         public static final double kWheelBase = 0.62;
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-                new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-                new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-                new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
-                new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
+                new Translation2d(kWheelBase / 2, -kTrackWidth / 2), // + olacak
+                new Translation2d(kWheelBase / 2, kTrackWidth / 2), // - olacak
+                new Translation2d(-kWheelBase / 2, -kTrackWidth / 2), // + olacak
+                new Translation2d(-kWheelBase / 2, kTrackWidth / 2)); // - olacak
                 
         //TODO: ports should be changed.
         public static final int kFrontLeftDriveMotorPort = 51;
