@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Autonumous.AutoDrive;
 
 public class RobotContainer {
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
@@ -37,7 +38,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return null;
+    return new AutoDrive(swerveSubsystem);
   }
 
   public Command getTeleopCommand() {

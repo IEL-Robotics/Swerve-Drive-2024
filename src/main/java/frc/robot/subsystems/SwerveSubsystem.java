@@ -94,6 +94,9 @@ public class SwerveSubsystem extends SubsystemBase {
     public Pose2d getPose() {
         return odometer.getPoseMeters();
     }
+    public void setPose(Pose2d pose) {
+        odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
+    }
 
     public void resetOdometry(Pose2d pose) {
         odometer.resetPosition(new Rotation2d(), new SwerveModulePosition[] {
@@ -150,13 +153,13 @@ public class SwerveSubsystem extends SubsystemBase {
             backLeft.getDrivePosition()
         };
     }
-    public void activateFollow(){
-        this.backLeft.driveMotor.follow(
-            this.frontLeft.driveMotor
-        );
-        this.backRight.driveMotor.follow(
-            this.frontRight.driveMotor
-        );
-        this.isFollow=true;
+    public SwerveModulePosition[] getModulePositions(){
+        SwerveModulePosition[] positions={
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition()
+        };
+        return positions;
     }
 }
