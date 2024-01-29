@@ -18,7 +18,6 @@ import frc.robot.Constants.SwerveConstants.DriveConstants;
 import frc.robot.subsystems.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
-    public boolean isFollow=false;
     public final SwerveModule frontLeft = new SwerveModule(
             DriveConstants.kFrontLeftDriveMotorPort,
             DriveConstants.kFrontLeftTurningMotorPort,
@@ -109,7 +108,14 @@ public class SwerveSubsystem extends SubsystemBase {
         },pose);
     }
     @Override
-    public void periodic(){}
+    public void periodic(){
+        odometer.update(getRotation2d(), 
+        getModulePositions()
+        );
+        SmartDashboard.putNumber("Odometer x: ",getPose().getX());
+        SmartDashboard.putNumber("Odometer y: ",getPose().getY());
+        System.out.println(odometer.getPoseMeters().getX());
+    }
     public void stopModules() {
         frontLeft.stop();
         frontRight.stop();
@@ -118,13 +124,15 @@ public class SwerveSubsystem extends SubsystemBase {
     }
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        frontLeft.setState(desiredStates[1]);
-        frontRight.setState(desiredStates[0]);
-        backLeft.setState(desiredStates[3]);
-        backRight.setState(desiredStates[2]);
+        frontLeft.setState(desiredStates[0]);
+        frontRight.setState(desiredStates[1]);
+        backLeft.setState(desiredStates[2]);
+        backRight.setState(desiredStates[3]);
     }
 
+
     public void allValuesDisplay() {
+        /* 
       SmartDashboard.putNumber("LF Encoder", frontLeft.getAbsEncRad());
       SmartDashboard.putNumber("LB Encoder",  backLeft.getAbsEncRad());
       SmartDashboard.putNumber("RF Encoder",  frontRight.getAbsEncRad());
@@ -136,6 +144,7 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("LB getTurn",  backLeft.getTurningPosition());
       SmartDashboard.putNumber("RF getTurn",  frontRight.getTurningPosition());
       SmartDashboard.putNumber("RB getTurn",  backRight.getTurningPosition());
+    */
     }
 
     public void updateSayac() {

@@ -140,7 +140,7 @@ public class SwerveModule {
         turningMotor.set(pidCont.calculate(getTurningPosition(), state.angle.getRadians()));
 
         //SmartDashboard.putNumber(String.format("%s TurnPos", moduleName), getTurningPosition());
-        SmartDashboard.putNumber(String.format("%s St.gR", moduleName), state.angle.getRadians());
+        //SmartDashboard.putNumber(String.format("%s St.gR", moduleName), state.angle.getRadians());
         // SmartDashboard.putNumber(String.format("%s pidOut", moduleName), pidCont.calculate(getTurningPosition(), state.angle.getRadians()));
     }
 
