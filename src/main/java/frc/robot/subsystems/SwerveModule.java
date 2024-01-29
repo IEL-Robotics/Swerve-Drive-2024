@@ -38,7 +38,7 @@ public class SwerveModule {
         dcEnc.setDutyCycleRange(1.0/4096.0, 4095.0/4096.0);
 
         driveMotor = new CANSparkMax(driveMotorId, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
-        turningMotor = new CANSparkMax(driveMotorId, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
+        turningMotor = new CANSparkMax(turningMotorId, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
         
         turningMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kBrake);
         driveMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kBrake);
@@ -106,7 +106,7 @@ public class SwerveModule {
 
     public void setState(SwerveModuleState state){
 
-        if (Math.abs(state.speedMetersPerSecond)<0.5){
+        if (Math.abs(state.speedMetersPerSecond)<0.75){
             stop();
             return;
         }

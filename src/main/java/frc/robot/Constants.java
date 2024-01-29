@@ -61,10 +61,10 @@ public final class Constants {
         public static final double kTrackWidth = 0.62;
         public static final double kWheelBase = 0.62;
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-                new Translation2d(kWheelBase / 2, -kTrackWidth / 2), // + olacak
-                new Translation2d(kWheelBase / 2, kTrackWidth / 2), // - olacak
-                new Translation2d(-kWheelBase / 2, -kTrackWidth / 2), // + olacak
-                new Translation2d(-kWheelBase / 2, kTrackWidth / 2)); // - olacak
+                new Translation2d(kWheelBase / 2, kTrackWidth / 2), // + olacak
+                new Translation2d(kWheelBase / 2, -kTrackWidth / 2), // - olacak
+                new Translation2d(-kWheelBase / 2, kTrackWidth / 2), // + olacak
+                new Translation2d(-kWheelBase / 2, -kTrackWidth / 2)); // - olacak
                 
         //TODO: ports should be changed.
         public static final int kFrontLeftDriveMotorPort = 51;
@@ -117,19 +117,19 @@ public final class Constants {
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 2;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = 
-                kPhysicalMaxAngularSpeedRadiansPerSecond / 1;
+                kPhysicalMaxAngularSpeedRadiansPerSecond / 2;
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 5;
-        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 12;
+        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 8;
     }
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 4;
+        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 2;
         public static final double kMaxAngularSpeedRadiansPerSecond = //
-                DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 10;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+                DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 1;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 5;
         public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
-        public static final double kPXController = 1.5;
-        public static final double kPYController = 1.5;
-        public static final double kPThetaController = 3;
+        public static final double kPXController = 0.5;
+        public static final double kPYController = 0.5;
+        public static final double kPThetaController = 0.5;
 
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = //
                 new TrapezoidProfile.Constraints(

@@ -84,7 +84,8 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getHeading() {
-        return -Math.IEEEremainder(gyro.getAngle(), 360);
+        //return -Math.IEEEremainder(gyro.getAngle(), 360);
+        return 0;
     }
 
     public Rotation2d getRotation2d() {
@@ -117,6 +118,8 @@ public class SwerveSubsystem extends SubsystemBase {
                 });
 
         SmartDashboard.putString("Konum", getPose().getTranslation().toString());
+        
+        SmartDashboard.putString("Aci", getRotation2d().toString());
     }
 
     public void stopModules() {
@@ -128,10 +131,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        frontLeft.setState(desiredStates[1]);
-        frontRight.setState(desiredStates[0]);
-        backLeft.setState(desiredStates[3]);
-        backRight.setState(desiredStates[2]);
+        frontLeft.setState(desiredStates[0]);
+        frontRight.setState(desiredStates[1]);
+        backLeft.setState(desiredStates[2]);
+        backRight.setState(desiredStates[3]);
     }
 
     public void allValuesDisplay() {
