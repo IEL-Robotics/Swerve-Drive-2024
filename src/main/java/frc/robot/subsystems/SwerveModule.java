@@ -127,7 +127,14 @@ public class SwerveModule {
             stop();
             return;
         }
-
+        SmartDashboard.putNumber(
+            String.format("desired speed of %s", moduleName),
+            state.speedMetersPerSecond
+        );
+        SmartDashboard.putNumber(
+            String.format("desired angle of %s", moduleName),
+            state.angle.getDegrees()
+        );
         state=SwerveModuleState.optimize(state, getState().angle);
         driveMotor.set(state.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turningMotor.set(pidCont.calculate(getTurningPosition(), state.angle.getRadians()));
@@ -156,7 +163,6 @@ public class SwerveModule {
     }
 
     public void sayacDisplay() {
-      System.out.println("duzenli");
       SmartDashboard.putNumber(String.format("%s SayacVal", moduleName), currentAbsPos);
       SmartDashboard.putNumber(String.format("%s Coef", moduleName), coefficient);
       SmartDashboard.putNumber(String.format("%s DesiredVal", moduleName), 2*Math.PI*coefficient + currentAbsPos);
@@ -168,13 +174,11 @@ public class SwerveModule {
 
     public void sayacUpdate() {
       prevAbsPos = currentAbsPos;
-      System.out.println("updateLog");
       currentAbsPos = getAbsEncRad() - absEncOffsetRad;      
     }
     
     public void sayacExecute() {
       sayacUpdate();
-      System.out.println("LOGGG");
       coefficient += sayacCatchSwitch();
       sayacDisplay();
     }
