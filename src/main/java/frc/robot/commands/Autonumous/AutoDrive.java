@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.tools.StandardJavaFileManager.PathFactory;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import edu.wpi.first.math.controller.PIDController;
@@ -27,14 +28,11 @@ public class AutoDrive extends SequentialCommandGroup  {
         this.subsystem=subsystem;
         PathPlannerPath path;
         path=PathPlannerPath.fromPathFile("Test Path");
-        ChassisSpeeds chassisSpeeds;
-        chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-              0, 0, 0,
-              subsystem.getRotation2d());
-        PathPlannerTrajectory traj=new PathPlannerTrajectory(path,chassisSpeeds,
+        PathPlannerTrajectory traj=new PathPlannerTrajectory(path,this.subsystem.getRobotRelativeSpeeds(),
         this.subsystem.getRotation2d());
-        
+        subsystem.resetOdometry(traj.getInitialTargetHolonomicPose());
         addCommands(
+            
             );
     }
 }
