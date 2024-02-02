@@ -6,6 +6,10 @@ import frc.robot.commands.Swerve.ResetEncoder;
 import frc.robot.commands.Swerve.SetSpecificPos;
 import frc.robot.commands.Swerve.SwerveDrive;
 import frc.robot.subsystems.SwerveSubsystem;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,7 +42,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new AutoDrive(swerveSubsystem);
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Test Path");
+    return AutoBuilder.followPath(path);
   }
 
   public Command getTeleopCommand() {
