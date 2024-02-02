@@ -18,6 +18,7 @@ import frc.robot.Constants.SwerveConstants.DriveConstants;
 import frc.robot.subsystems.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
+    public boolean isFollow=false;
     public final SwerveModule frontLeft = new SwerveModule(
             DriveConstants.kFrontLeftDriveMotorPort,
             DriveConstants.kFrontLeftTurningMotorPort,
@@ -84,8 +85,6 @@ public class SwerveSubsystem extends SubsystemBase {
       // SmartDashboard.putNumber("Gyro Abs", gyro.getAngle());
       // SmartDashboard.putNumber("Gyro Remain", Math.IEEEremainder(gyro.getAngle(), 360));
         return -Math.IEEEremainder(gyro.getAngle(), 360);
-
-    //return 0;
     }
 
     public Rotation2d getRotation2d() {
@@ -108,14 +107,7 @@ public class SwerveSubsystem extends SubsystemBase {
         },pose);
     }
     @Override
-    public void periodic(){
-        odometer.update(getRotation2d(), 
-        getModulePositions()
-        );
-        SmartDashboard.putNumber("Odometer x: ",getPose().getX());
-        SmartDashboard.putNumber("Odometer y: ",getPose().getY());
-        System.out.println(odometer.getPoseMeters().getX());
-    }
+    public void periodic(){}
     public void stopModules() {
         frontLeft.stop();
         frontRight.stop();
@@ -124,15 +116,13 @@ public class SwerveSubsystem extends SubsystemBase {
     }
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        frontLeft.setState(desiredStates[0]);
-        frontRight.setState(desiredStates[1]);
-        backLeft.setState(desiredStates[2]);
-        backRight.setState(desiredStates[3]);
+        frontLeft.setState(desiredStates[1]);
+        frontRight.setState(desiredStates[0]);
+        backLeft.setState(desiredStates[3]);
+        backRight.setState(desiredStates[2]);
     }
 
-
     public void allValuesDisplay() {
-        /* 
       SmartDashboard.putNumber("LF Encoder", frontLeft.getAbsEncRad());
       SmartDashboard.putNumber("LB Encoder",  backLeft.getAbsEncRad());
       SmartDashboard.putNumber("RF Encoder",  frontRight.getAbsEncRad());
@@ -144,7 +134,6 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("LB getTurn",  backLeft.getTurningPosition());
       SmartDashboard.putNumber("RF getTurn",  frontRight.getTurningPosition());
       SmartDashboard.putNumber("RB getTurn",  backRight.getTurningPosition());
-    */
     }
 
     public void updateSayac() {

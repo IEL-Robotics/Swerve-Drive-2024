@@ -1,7 +1,6 @@
 package frc.robot.commands.Autonumous;
 
 import java.util.List;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -30,9 +29,9 @@ public class AutoDrive extends SequentialCommandGroup  {
                 .setKinematics(Constants.SwerveConstants.DriveConstants.kDriveKinematics);
         this.trajectory =
             TrajectoryGenerator.generateTrajectory(
-                new Pose2d(0, 0, new Rotation2d(0)),
+                new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
                 List.of(new Translation2d(1, 0), new Translation2d(2,0)),
-                new Pose2d(3, 0, new Rotation2d(0)),
+                new Pose2d(3, 0,Rotation2d.fromDegrees(0)),
                 config);
         this.thetaController =
             new ProfiledPIDController(
@@ -52,13 +51,11 @@ public class AutoDrive extends SequentialCommandGroup  {
         addCommands(
 
             new InstantCommand(
-                () -> subsystem.setPose(trajectory.getInitialPose()),
-                subsystem
+                () -> subsystem.setPose(trajectory.getInitialPose())
                 ),
             swerveControllerCommand,
             new InstantCommand(
-                () -> subsystem.stopModules(),
-                subsystem
+                () -> subsystem.stopModules()
                 )
             );
     }
