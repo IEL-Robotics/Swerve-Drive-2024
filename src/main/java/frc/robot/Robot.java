@@ -71,7 +71,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    m_robotContainer.swerveSubsystem.updateSayac();
+    System.out.println("Updated Sayac");
+  }
 
   @Override
   public void teleopInit() {

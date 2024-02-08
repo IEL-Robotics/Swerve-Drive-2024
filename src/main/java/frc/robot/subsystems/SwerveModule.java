@@ -53,9 +53,9 @@ public class SwerveModule {
         driveEnc.setVelocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec);
 
         //turningEnc.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad);
-        // turningEnc.setPositionConversionFactor(0.2929938434314728);
-        // //turningEnc.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
-        // turningEnc.setVelocityConversionFactor(0.005018123109638691);    
+        //turningEnc.setPositionConversionFactor(0.2929938434314728);
+        //turningEnc.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
+        //turningEnc.setVelocityConversionFactor(0.005018123109638691);    
 
         pidCont = new PIDController(0.5, 0.01, 0.00);
         pidCont.enableContinuousInput(-Math.PI, Math.PI);
@@ -75,7 +75,7 @@ public class SwerveModule {
     }
 
     public double getTurningPosition(){
-        // return turningEnc.getPosition();
+        //return turningEnc.getPosition();
         return sayacFinalVals();
     }
 
@@ -146,7 +146,8 @@ public class SwerveModule {
 
     public void sayacUpdate() {
       prevAbsPos = currentAbsPos;
-      currentAbsPos = getAbsEncRad() - absEncOffsetRad;      
+      currentAbsPos = getAbsEncRad() - absEncOffsetRad;
+      sayacDisplay();    
     }
     
     public void sayacExecute() {

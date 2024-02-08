@@ -72,7 +72,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public SwerveSubsystem() {
         new Thread(() -> {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(1000);//1000
                 zeroHeading();
             } catch (Exception e) {
             }
@@ -84,8 +84,8 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getHeading() {
-        //return -Math.IEEEremainder(gyro.getAngle(), 360);
-        return 0;
+        return -Math.IEEEremainder(gyro.getAngle(), 360);
+        //return 0;
     }
 
     public Rotation2d getRotation2d() {
@@ -120,6 +120,8 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putString("Konum", getPose().getTranslation().toString());
         
         SmartDashboard.putString("Aci", getRotation2d().toString());
+        SmartDashboard.putNumber(" Heading Aci", getHeading());
+
     }
 
     public void stopModules() {
