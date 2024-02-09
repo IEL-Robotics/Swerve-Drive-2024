@@ -61,19 +61,17 @@ public class RobotContainer {
     TrajectoryConfig trajectoryConfig = new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared).setKinematics(DriveConstants.kDriveKinematics);
     
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-                            new Pose2d(0, 0, new Rotation2d(0)),
+                            new Pose2d(0*3.6, 0*3.6, new Rotation2d(0)),
                             List.of(
-                              new Translation2d(0, 1),
-                              new Translation2d(0, 2),
-                              new Translation2d(0, 3)
+                              new Translation2d(1*3.6, 0.5*3.6)
                             ),
-                            new Pose2d(0, 4, new Rotation2d(6.56)),
+                            new Pose2d(2*3.6, 1*3.6, Rotation2d.fromDegrees(270)),
                             trajectoryConfig);
 
     PIDController xController = new PIDController(AutoConstants.kPXController, 0.01, 0.005);
     PIDController yController = new PIDController(AutoConstants.kPYController, 0.01, 0.005);
     ProfiledPIDController thetaController = new ProfiledPIDController(
-                          AutoConstants.kPThetaController, 0.01, 0.005, AutoConstants.kThetaControllerConstraints);
+                          2.25, 0.25, 0.0025, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
