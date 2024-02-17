@@ -40,13 +40,14 @@ public class SwerveModule {
         driveMotor = new CANSparkMax(driveMotorId, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
         turningMotor = new CANSparkMax(turningMotorId, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
         
-        turningMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kBrake);
-        driveMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kBrake);
+        turningMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kCoast);
+        driveMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kCoast);
 
         driveMotor.setInverted(driveMotorReversed);
         turningMotor.setInverted(turningMotorReversed);
 
         driveEnc = driveMotor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
+        
         turningEnc = turningMotor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
 
         driveEnc.setPositionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter);
@@ -135,9 +136,10 @@ public class SwerveModule {
     }
 
     public void sayacDisplay() {
-      SmartDashboard.putNumber(String.format("%s SayacVal", moduleName), currentAbsPos);
-      SmartDashboard.putNumber(String.format("%s Coef", moduleName), coefficient);
-      SmartDashboard.putNumber(String.format("%s DesiredVal", moduleName), 2*Math.PI*coefficient + currentAbsPos);
+    //   SmartDashboard.putNumber(String.format("%s SayacVal", moduleName), currentAbsPos);
+    //   SmartDashboard.putNumber(String.format("%s Coef", moduleName), coefficient);
+    //   SmartDashboard.putNumber(String.format("%s DesiredVal", moduleName), 2*Math.PI*coefficient + currentAbsPos);
+    SmartDashboard.putNumber(String.format("%s DriveEnc", moduleName), getDrivePosition());
     }
 
     public double sayacFinalVals() {

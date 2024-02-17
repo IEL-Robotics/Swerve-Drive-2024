@@ -20,14 +20,17 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants.AutoConstants;
 import frc.robot.Constants.SwerveConstants.DriveConstants;
 import frc.robot.Constants.SwerveConstants.OIConstants;
-import frc.robot.commands.Swerve.ResetEncoder;
+import frc.robot.commands.Autonomus.TrajectoryDrive1;
+import frc.robot.commands.Swerve.ResetGyro;
 import frc.robot.commands.Swerve.SwerveDrive;
+import frc.robot.commands.Swerve.rotateThisMuch;
+import frc.robot.commands.Swerve.rotateToSpecificDeg;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
-  private final ResetEncoder m_ResetEncoder = new ResetEncoder(swerveSubsystem);
+  private final ResetGyro m_ResetGyro = new ResetGyro(swerveSubsystem);
 
   private final PS4Controller m_driverController = new PS4Controller(OperatorConstants.kDriverControllerPort);
 
@@ -38,7 +41,12 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-        new JoystickButton(m_driverController, 2).onTrue(m_ResetEncoder);
+    //Cross
+        new JoystickButton(m_driverController, 2).onTrue(m_ResetGyro);
+    //Circle
+        new JoystickButton(m_driverController, 3).onTrue(new rotateThisMuch(swerveSubsystem, 90));
+    //Triangle
+        new JoystickButton(m_driverController, 4).onTrue(new rotateToSpecificDeg(swerveSubsystem, 90));
   }
 
   public Command getTeleopCommand() {
@@ -56,33 +64,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    swerveSubsystem.zeroHeading();
-
-    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared).setKinematics(DriveConstants.kDriveKinematics);
-    
-    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-                            new Pose2d(0*3.6, 0*3.6, new Rotation2d(0)),
-                            List.of(
-                              new Translation2d(1*3.6, 0.5*3.6)
-                            ),
-                            new Pose2d(2*3.6, 1*3.6, Rotation2d.fromDegrees(270)),
-                            trajectoryConfig);
-
-    PIDController xController = new PIDController(AutoConstants.kPXController, 0.01, 0.005);
-    PIDController yController = new PIDController(AutoConstants.kPYController, 0.01, 0.005);
-    ProfiledPIDController thetaController = new ProfiledPIDController(
-                          2.25, 0.25, 0.0025, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-      trajectory, swerveSubsystem::getPose, DriveConstants.kDriveKinematics, xController, yController, thetaController,
-      swerveSubsystem::setModuleStates, swerveSubsystem);
-
-    return new SequentialCommandGroup(
-      new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
-      swerveControllerCommand,
-      new InstantCommand(() -> swerveSubsystem.stopModules())
-    );
+    TrajectoryDrive1 commandTraj1= new TrajectoryDrive1(swerveSubsystem);
+    return commandTraj1;
   }
 
   public void allValuesDisplay() {

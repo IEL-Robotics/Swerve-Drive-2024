@@ -64,10 +64,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
 
-    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(
+    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry( // Autonomus
         DriveConstants.kDriveKinematics,
         new Rotation2d(0),
-        new SwerveModulePosition[] { //Teleopta endeksler farkli oldugundan, burada da farkli sirayla mi koymaliyiz?
+        new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
             backLeft.getPosition(),
@@ -94,6 +94,10 @@ public class SwerveSubsystem extends SubsystemBase {
     public double getHeading() {
         return -Math.IEEEremainder(gyro.getAngle(), 360);
         //return 0;
+    }
+
+    public double getHeadingEndless() {
+        return -gyro.getAngle();
     }
 
     public Rotation2d getRotation2d() {
@@ -129,6 +133,7 @@ public class SwerveSubsystem extends SubsystemBase {
         
         SmartDashboard.putString("Aci", getRotation2d().toString());
         SmartDashboard.putNumber(" Heading Aci", getHeading());
+        SmartDashboard.putNumber("Endless Heading Aci", getHeadingEndless());
 
     }
 
@@ -147,18 +152,7 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.setState(desiredStates[3]);
     }
 
-    public ChassisSpeeds getRobotRelativeSpeeds() {
-        SwerveModuleState[] states = new SwerveModuleState[]{
-            frontLeft.getState(),
-            frontRight.getState(),
-            backLeft.getState(),
-            backRight.getState()
-        };
-        return DriveConstants.kDriveKinematics.toChassisSpeeds(states);
-    }
-    public void driveRobotRelative(ChassisSpeeds speeds) {
-        setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds));
-    }
+    /***************************************************************************************** */
 
     public void allValuesDisplay() {
       SmartDashboard.putNumber("LF Encoder", frontLeft.getAbsEncRad());
