@@ -11,10 +11,12 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class rotateToSpecificDeg extends Command {
 
     public SwerveSubsystem swerveSubsystem;
-    public PIDController pidController = new PIDController(0.3, 0.0015, 0.00);
+    public PIDController pidController = new PIDController(0.25, 0.25, 0.005);
     ChassisSpeeds chassisSpeeds;
 
-    double error, output, desiredAngle;
+    double error, output, desiredAngle, currentAngle, realDesiredAngle;
+    int kConstant;
+    boolean myInit = true;
 
   public rotateToSpecificDeg(SwerveSubsystem swerveSubsystem, double desiredAngle) {
     this.swerveSubsystem = swerveSubsystem;
@@ -25,19 +27,30 @@ public class rotateToSpecificDeg extends Command {
 
   @Override
   public void initialize() {
+    kConstant = (int) swerveSubsystem.getHeadingEndless() / 360;
+    realDesiredAngle = (desiredAngle) + (360*kConstant);
+    SmartDashboard.putNumber("RDAngle", realDesiredAngle);
   }
 
   @Override
-  public void execute() {
+  public void execute() { //sapma yazilimsal mi anlamak icin turningspd 0 feedle, sonra sur, rotasyonu kapa yani
+//pid i bitirmesene bi
+    if(myInit){
+      kConstant = (int) swerveSubsystem.getHeadingEndless() / 360;
+      realDesiredAngle = (desiredAngle) + (360*kConstant);
+      SmartDashboard.putNumber("RDAngle", realDesiredAngle);
+      myInit = false;
+    }
 
-    error = desiredAngle - swerveSubsystem.getHeading();
-    output = pidController.calculate(error, desiredAngle);
+    currentAngle = swerveSubsystem.getHeadingEndless();
+    output = pidController.calculate(currentAngle, realDesiredAngle);
+    error = realDesiredAngle - currentAngle;
     
     SmartDashboard.putNumber("Error temp", error);
-    SmartDashboard.putNumber("Output temp", output);
+    SmartDashboard.putNumber("Output temp", swerveSubsystem.customSigmoid(output));
 
     chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 
-    output, swerveSubsystem.getRotation2d());
+    -swerveSubsystem.customSigmoid(output), swerveSubsystem.getRotation2d());
 
     SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
@@ -46,16 +59,19 @@ public class rotateToSpecificDeg extends Command {
 
     System.out.println("Executing rotateToSpecificDeg");
   }
-    
+
   @Override
   public void end(boolean interrupted) {
+    myInit = true;
     swerveSubsystem.stopModules();
     System.out.println("FINISHED rotateToSpecificDeg");
   }
 
   @Override
   public boolean isFinished() {
-    if(error < 3){return true;}
+    if(Math.abs(error) < 5){return true;}
     else{return false;}
+
+    //return false;
   }
 }

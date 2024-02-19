@@ -45,8 +45,10 @@ public class RobotContainer {
         new JoystickButton(m_driverController, 2).onTrue(m_ResetGyro);
     //Circle
         new JoystickButton(m_driverController, 3).onTrue(new rotateThisMuch(swerveSubsystem, 90));
+    //Square
+        new JoystickButton(m_driverController, 1).onTrue(new rotateThisMuch(swerveSubsystem, -90));
     //Triangle
-        new JoystickButton(m_driverController, 4).onTrue(new rotateToSpecificDeg(swerveSubsystem, 90));
+        new JoystickButton(m_driverController, 4).onTrue(new rotateToSpecificDeg(swerveSubsystem, 72));
   }
 
   public Command getTeleopCommand() {
@@ -58,7 +60,7 @@ public class RobotContainer {
         () -> m_driverController.getRawAxis(OIConstants.kDriverYAxis),
         () -> m_driverController.getRawAxis(OIConstants.kDriverXAxis),
         () -> m_driverController.getRawAxis(OIConstants.kDriverRotAxis),
-        () -> !(m_driverController.getL2Axis()>0.5)
+        () -> !(m_driverController.getRawButtonReleased(14))
     );
 
   }

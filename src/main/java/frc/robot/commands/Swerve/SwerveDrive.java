@@ -55,12 +55,14 @@ public class SwerveDrive extends Command {
 
     xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
     ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
-    turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
+    turningSpeed = Math.abs(turningSpeed) > 0.1 ? turningSpeed : 0.0;
 
     xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
     ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
     turningSpeed = rotLimiter.calculate(turningSpeed) * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
+    SmartDashboard.putBoolean("Touchpad Pressed", fieldOrientedFunction.get());
+    SmartDashboard.putNumber("Default Turning Speed", turningSpeed);
     chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
         xSpeed, ySpeed, turningSpeed, swerveSubsystem.getRotation2d());
     // if (fieldOrientedFunction.get()) {

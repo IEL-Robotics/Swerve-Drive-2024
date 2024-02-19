@@ -40,8 +40,8 @@ public class SwerveModule {
         driveMotor = new CANSparkMax(driveMotorId, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
         turningMotor = new CANSparkMax(turningMotorId, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
         
-        turningMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kCoast);
-        driveMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kCoast);
+        turningMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kBrake);
+        driveMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kBrake);
 
         driveMotor.setInverted(driveMotorReversed);
         turningMotor.setInverted(turningMotorReversed);

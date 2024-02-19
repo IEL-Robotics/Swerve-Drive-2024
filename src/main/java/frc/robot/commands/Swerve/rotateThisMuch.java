@@ -11,10 +11,11 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class rotateThisMuch extends Command {
 
     public SwerveSubsystem swerveSubsystem;
-    public PIDController pidController = new PIDController(0.3, 0.0015, 0.00);
+    public PIDController pidController = new PIDController(0.25, 0.25, 0.005);
     ChassisSpeeds chassisSpeeds;
 
-    double error, output, initialAngle, desiredAngle;
+    double error, output, initialAngle, desiredAngle, currentAngle;
+    boolean myInit = true;
 
   public rotateThisMuch(SwerveSubsystem swerveSubsystem, double desiredAngle) {
     this.swerveSubsystem = swerveSubsystem;
@@ -29,15 +30,19 @@ public class rotateThisMuch extends Command {
 
   @Override
   public void execute() {
+    if(myInit){initialAngle = swerveSubsystem.getHeadingEndless();myInit = false;System.out.println("myInit CHANGED " + initialAngle);}
+  
+    currentAngle = swerveSubsystem.getHeadingEndless();
+    output = pidController.calculate(currentAngle, desiredAngle + initialAngle);
+    error = (desiredAngle + initialAngle) - currentAngle;
 
-    error = (desiredAngle + initialAngle) - swerveSubsystem.getHeadingEndless();
-    output = pidController.calculate(swerveSubsystem.getHeadingEndless(), desiredAngle);
 
-    SmartDashboard.putNumber("Error temp", error);
-    SmartDashboard.putNumber("Output temp", output);
+    SmartDashboard.putNumber("Error", error);
+    SmartDashboard.putNumber("RawOutput", output);
+    SmartDashboard.putNumber("SigmoidOutput", swerveSubsystem.customSigmoid(output));
 
     chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 
-    output, swerveSubsystem.getRotation2d());
+    -swerveSubsystem.customSigmoid(output), swerveSubsystem.getRotation2d());
 
     SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
@@ -49,13 +54,16 @@ public class rotateThisMuch extends Command {
     
   @Override
   public void end(boolean interrupted) {
+    myInit = true;
     swerveSubsystem.stopModules();
     System.out.println("FINISHED rotateThisMuch");
   }
 
   @Override
   public boolean isFinished() {
-    if(error < 3){return true;}
+    if(Math.abs(error) < 2.5){return true;}
     else{return false;}
+
+    //return false;
   }
 }

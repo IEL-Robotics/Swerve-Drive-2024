@@ -58,8 +58,8 @@ public final class Constants {
 
     public static final class DriveConstants {
 
-        public static final double kTrackWidth = 0.62;
-        public static final double kWheelBase = 0.62;
+        public static final double kTrackWidth = 0.635;
+        public static final double kWheelBase = 0.635;
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
                 new Translation2d(kWheelBase / 2, kTrackWidth / 2), // + olacak
                 new Translation2d(kWheelBase / 2, -kTrackWidth / 2), // - olacak

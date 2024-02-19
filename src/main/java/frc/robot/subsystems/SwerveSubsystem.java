@@ -152,6 +152,11 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.setState(desiredStates[3]);
     }
 
+    public double customSigmoid(double input) { // -1/3 -> Questionable -> Emel kiziyo
+        double maxAngSpd = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+        return ((2*maxAngSpd)/(1+Math.pow(Math.E,((double)-1/6)*(input))))-(maxAngSpd);
+    }
+
     /***************************************************************************************** */
 
     public void allValuesDisplay() {
