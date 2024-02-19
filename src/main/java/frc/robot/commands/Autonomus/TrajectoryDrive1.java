@@ -24,16 +24,16 @@ public class TrajectoryDrive1 extends SequentialCommandGroup{
 
     TrajectoryConfig trajectoryConfig = new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared).setKinematics(DriveConstants.kDriveKinematics);
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-                            new Pose2d(0, 0, new Rotation2d(0)),
+                            new Pose2d(0 * 3.28084, 0 * 3.28084, new Rotation2d(0)),
                             List.of(
-                              new Translation2d(0, 1),
-                              new Translation2d(0, 3)
+                              new Translation2d(0 * 3.28084, 1 * 3.28084),
+                              new Translation2d(0 * 3.28084, 3 * 3.28084)
                             ),
-                            new Pose2d(0, 5, Rotation2d.fromDegrees(0)),
+                            new Pose2d(0 * 3.28084, 5 * 3.28084, Rotation2d.fromDegrees(0)),
                             trajectoryConfig);
 
-    PIDController xController = new PIDController(AutoConstants.kPXController, 0.01, 0.005);
-    PIDController yController = new PIDController(AutoConstants.kPYController, 0.01, 0.005);
+    PIDController xController = new PIDController(0.00, 0.0, 0.015);
+    PIDController yController = new PIDController(0.00, 0.0, 0.015);
     /*ProfiledPIDController thetaController = new ProfiledPIDController(
                           2.75, 0.1, 0.0035, AutoConstants.kThetaControllerConstraints);
                           */
