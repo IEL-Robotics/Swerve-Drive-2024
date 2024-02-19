@@ -2,6 +2,9 @@ package frc.robot;
 
 import java.util.List;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,6 +15,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -66,8 +70,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    TrajectoryDrive1 commandTraj1= new TrajectoryDrive1(swerveSubsystem);
-    return commandTraj1;
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Test Path");
+    return Commands.runOnce(() -> swerveSubsystem.resetOdometry(path.getPreviewStartingHolonomicPose())).andThen(AutoBuilder.followPath(path));
   }
 
   public void allValuesDisplay() {

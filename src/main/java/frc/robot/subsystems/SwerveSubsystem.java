@@ -85,6 +85,27 @@ public class SwerveSubsystem extends SubsystemBase {
             }
         }).start();
 
+        AutoBuilder.configureHolonomic(
+            this::getPose, // Robot pose supplier
+            this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                    new PIDConstants(0.1, 0.0, 0.005), // Translation PID constants
+                    new PIDConstants(0.1, 0.0, 0.005), // Rotation PID constants
+                    AutoConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
+                    Math.hypot(DriveConstants.kTrackWidth / 2, DriveConstants.kWheelBase / 2), // Drive base radius in meters. Distance from robot center to furthest module.
+                    new ReplanningConfig() // Default path replanning config. See the API for the options here
+            ),
+            () -> {
+              var alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
+              return false;
+            },
+            this
+    );
         }
 
     public void zeroHeading() {
@@ -177,5 +198,28 @@ public class SwerveSubsystem extends SubsystemBase {
       backLeft.sayacExecute();
       backRight.sayacExecute();
     }
-
+    public SwerveModulePosition[] getModulePositions(){
+        SwerveModulePosition[] positions={
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition()
+        };
+        return positions;
+    }
+    public ChassisSpeeds getRobotRelativeSpeeds() {
+        SwerveModuleState[] states = new SwerveModuleState[]{
+            frontLeft.getState(),
+            frontRight.getState(),
+            backLeft.getState(),
+            backRight.getState()
+        };
+        return DriveConstants.kDriveKinematics.toChassisSpeeds(states);
+    }
+    public void driveRobotRelative(ChassisSpeeds speeds) {
+        setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds));
+    }
+    public void setPose(Pose2d pose) {
+        odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
+    }
 }
