@@ -105,6 +105,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public Pose2d getPose() {
+        SmartDashboard.putString("Odometer.getPoseMeters()", odometer.getPoseMeters().toString());
         return odometer.getPoseMeters();
     }
 
@@ -145,7 +146,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);//comment out?
         frontLeft.setState(desiredStates[0]);
         frontRight.setState(desiredStates[1]);
         backLeft.setState(desiredStates[2]);
