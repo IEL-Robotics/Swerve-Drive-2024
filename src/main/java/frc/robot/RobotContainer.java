@@ -8,19 +8,19 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants.OIConstants;
 import frc.robot.commands.Arm.lowerArm;
 import frc.robot.commands.Arm.raiseArm;
-//import frc.robot.commands.Autonomus.TrajectoryDrive1;
+import frc.robot.commands.Autonomus.TrajectoryDrive1;
 import frc.robot.commands.Swerve.ResetGyro;
 import frc.robot.commands.Swerve.SwerveDrive;
 import frc.robot.commands.Swerve.rotateThisMuch;
 import frc.robot.commands.Swerve.rotateToSpecificDeg;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.SwerveSubsystem;
-//import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   public final Arm armSubsystem =  new Arm();
-  //public final Vision visionSubsystem = new Vision();
+  public final Vision visionSubsystem = new Vision();
 
   private final ResetGyro m_ResetGyro = new ResetGyro(swerveSubsystem);
   private final raiseArm m_RaiseArm = new raiseArm(armSubsystem);
@@ -30,7 +30,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(getTeleopCommand());
-    //visionSubsystem.setDefaultCommand(getAutonomousCommand());
+    visionSubsystem.setDefaultCommand(getAutonomousCommand());
 
     configureBindings();
   }
@@ -49,8 +49,6 @@ public class RobotContainer {
   }
 
   public Command getTeleopCommand() {
-    // double betaAngle =
-    // ((Math.atan2(-(m_driverController.getRawAxis(0)),(m_driverController.getRawAxis(1)))));
 
     return new SwerveDrive(
         swerveSubsystem,
@@ -61,24 +59,25 @@ public class RobotContainer {
 
   }
 
-  // public Command getAutonomousCommand() {
-  //   double[] xCor1 = { 1, 2, 3 };
-  //   double[] yCor1 = { 0, 0, 0 };
-  //   double[] xCor2 = { 3, 3, 3 };
-  //   double[] yCor2 = { 1, 2, 3 };
-  //   double[] xCor3 = { 3, 4, 0 };
-  //   double[] yCor3 = { 3, 4, 0 };
-
-  //   TrajectoryDrive1 commandTraj1 = new TrajectoryDrive1(swerveSubsystem, visionSubsystem, xCor1, yCor1, 0., true);
-  //   TrajectoryDrive1 commandTraj2 = new TrajectoryDrive1(swerveSubsystem, visionSubsystem, xCor2, yCor2, 0., false);
-  //   TrajectoryDrive1 commandTraj3 = new TrajectoryDrive1(swerveSubsystem, visionSubsystem, xCor3, yCor3, 0., false);
-
-  //   return new SequentialCommandGroup(commandTraj1, commandTraj2, commandTraj3);
-  // }
-
   public Command getAutonomousCommand() {
-    return null;
+    System.out.println("LogTrial0");
+    double[] xCor1 = { 1, 2, 3 };
+    double[] yCor1 = { 0, 0, 0 };
+    double[] xCor2 = { 3, 3, 3 };
+    double[] yCor2 = { 1, 2, 3 };
+    double[] xCor3 = { 3, 4, 0 };
+    double[] yCor3 = { 3, 4, 0 };
+
+    TrajectoryDrive1 commandTraj1 = new TrajectoryDrive1(swerveSubsystem, visionSubsystem, xCor1, yCor1, 0., true);
+    // TrajectoryDrive1 commandTraj2 = new TrajectoryDrive1(swerveSubsystem, visionSubsystem, xCor2, yCor2, 0., false);
+    // TrajectoryDrive1 commandTraj3 = new TrajectoryDrive1(swerveSubsystem, visionSubsystem, xCor3, yCor3, 0., false);
+
+    return new SequentialCommandGroup(commandTraj1);
   }
+
+  // public Command getAutonomousCommand() {
+  //   return null;
+  // }
 
   public void allValuesDisplay() {
     swerveSubsystem.allValuesDisplay();
