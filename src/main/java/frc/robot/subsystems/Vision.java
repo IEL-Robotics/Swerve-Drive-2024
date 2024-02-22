@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
-    private PhotonCamera camera = new PhotonCamera("BRIO_4K_STREAM_EDITION");
+    private PhotonCamera camera = new PhotonCamera("MyCamera");
 
     private AprilTagFieldLayout aprilTagFieldLayout;
 
@@ -43,9 +43,15 @@ public class Vision extends SubsystemBase {
     public Vision() {
         try {
             this.aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-        } catch (Exception e) {
+        } catch (Exception e) {            
             e.printStackTrace();
+
         }
+        targetTags();
+    }
+
+    public void targetTags() {
+        camera.setPipelineIndex(0);
     }
 
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
@@ -72,9 +78,9 @@ public class Vision extends SubsystemBase {
         values[1] = y;
         values[2] = angle;
 
-        SmartDashboard.putNumber("New Tag X", values[0]);
-        SmartDashboard.putNumber("New Tag Y", values[1]);
-        SmartDashboard.putNumber("New Tag Angle", values[2]);
+        SmartDashboard.putNumber("X in Field", values[0]);
+        SmartDashboard.putNumber("Y in Field", values[1]);
+        SmartDashboard.putNumber("Angle in Field", values[2]);
 
         return values;
     }
@@ -84,14 +90,14 @@ public class Vision extends SubsystemBase {
         if (result.hasTargets()) {
             target = result.getBestTarget();
 
-            SmartDashboard.putNumber("DynamicX",
-                    PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
-                            aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), camera2Robot).getX());
-            SmartDashboard.putNumber("DynamicY",
-                    PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
-                            aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), camera2Robot).getY());
-            SmartDashboard.putNumber("GBCTT X", target.getBestCameraToTarget().getTranslation().getX());
-            SmartDashboard.putNumber("GBCTT Y", target.getBestCameraToTarget().getTranslation().getY());
+            // SmartDashboard.putNumber("DynamicX",
+            //         PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
+            //                 aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), camera2Robot).getX());
+            // SmartDashboard.putNumber("DynamicY",
+            //         PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
+            //                 aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), camera2Robot).getY());
+            // SmartDashboard.putNumber("GBCTT X", target.getBestCameraToTarget().getTranslation().getX());
+            // SmartDashboard.putNumber("GBCTT Y", target.getBestCameraToTarget().getTranslation().getY());
 
             return target.getFiducialId();
         }

@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -9,6 +10,7 @@ import frc.robot.Constants.SwerveConstants.OIConstants;
 import frc.robot.commands.Arm.lowerArm;
 import frc.robot.commands.Arm.raiseArm;
 import frc.robot.commands.Autonomus.TrajectoryDrive1;
+import frc.robot.commands.Autonomus.VisionCommand;
 import frc.robot.commands.Swerve.ResetGyro;
 import frc.robot.commands.Swerve.SwerveDrive;
 import frc.robot.commands.Swerve.rotateThisMuch;
@@ -49,13 +51,15 @@ public class RobotContainer {
   }
 
   public Command getTeleopCommand() {
+    NetworkTableInstance defaultInst = NetworkTableInstance.getDefault();
 
     return new SwerveDrive(
         swerveSubsystem,
         () -> m_driverController.getRawAxis(OIConstants.kDriverYAxis),
         () -> m_driverController.getRawAxis(OIConstants.kDriverXAxis),
         () -> m_driverController.getRawAxis(OIConstants.kDriverRotAxis),
-        () -> !(m_driverController.getRawButtonReleased(14)));
+        () -> !(m_driverController.getRawButtonReleased(14)),
+        visionSubsystem);
 
   }
 
@@ -68,11 +72,11 @@ public class RobotContainer {
     double[] xCor3 = { 3, 4, 0 };
     double[] yCor3 = { 3, 4, 0 };
 
-    TrajectoryDrive1 commandTraj1 = new TrajectoryDrive1(swerveSubsystem, visionSubsystem, xCor1, yCor1, 0., true);
+    //TrajectoryDrive1 commandTraj1 = new TrajectoryDrive1(swerveSubsystem, visionSubsystem, xCor1, yCor1, 0., true);
     // TrajectoryDrive1 commandTraj2 = new TrajectoryDrive1(swerveSubsystem, visionSubsystem, xCor2, yCor2, 0., false);
     // TrajectoryDrive1 commandTraj3 = new TrajectoryDrive1(swerveSubsystem, visionSubsystem, xCor3, yCor3, 0., false);
 
-    return new SequentialCommandGroup(commandTraj1);
+    return null;//new VisionCommand(visionSubsystem);
   }
 
   // public Command getAutonomousCommand() {

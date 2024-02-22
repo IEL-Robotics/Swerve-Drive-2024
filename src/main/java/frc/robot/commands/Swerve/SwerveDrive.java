@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.SwerveConstants.DriveConstants;
 import frc.robot.Constants.SwerveConstants.OIConstants;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Vision;
 
 public class SwerveDrive extends Command {
   private final SwerveSubsystem swerveSubsystem;
@@ -26,16 +27,19 @@ public class SwerveDrive extends Command {
   
   ChassisSpeeds chassisSpeeds;
 
+  Vision vision;
+
   /** Creates a new Drive. */
   public SwerveDrive(SwerveSubsystem swerve,
       Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turningSpdFunction,
-      Supplier<Boolean> fieldOrientedFunction) {
+      Supplier<Boolean> fieldOrientedFunction, Vision vision) {
     addRequirements(swerve);
     this.swerveSubsystem = swerve;
     this.fieldOrientedFunction = fieldOrientedFunction;
     this.xSpdFunction = xSpdFunction;
     this.ySpdFunction = ySpdFunction;
     this.turningSpdFunction = turningSpdFunction;
+    this.vision = vision;
   }
 
   // Called when the command is initially scheduled.
@@ -78,6 +82,8 @@ public class SwerveDrive extends Command {
 
     swerveSubsystem.setModuleStates(moduleStates);
     swerveSubsystem.updateSayac();
+    vision.getFieldPosition();
+    SmartDashboard.putNumber("TagID", vision.getTagID());
   }
 
   @Override
