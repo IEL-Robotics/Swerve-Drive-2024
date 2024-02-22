@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     m_robotContainer.swerveSubsystem.updateSayac();
-    System.out.println("Updated Sayac");
+    //System.out.println("Updated Sayac");
   }
 
   @Override

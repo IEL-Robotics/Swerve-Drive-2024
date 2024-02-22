@@ -1,11 +1,25 @@
 package frc.robot;
 
+import java.util.List;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.SwerveConstants.AutoConstants;
+import frc.robot.Constants.SwerveConstants.DriveConstants;
 import frc.robot.Constants.SwerveConstants.OIConstants;
 import frc.robot.commands.Arm.lowerArm;
 import frc.robot.commands.Arm.raiseArm;
@@ -32,7 +46,6 @@ public class RobotContainer {
 
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(getTeleopCommand());
-    visionSubsystem.setDefaultCommand(getAutonomousCommand());
 
     configureBindings();
   }
@@ -51,8 +64,6 @@ public class RobotContainer {
   }
 
   public Command getTeleopCommand() {
-    NetworkTableInstance defaultInst = NetworkTableInstance.getDefault();
-
     return new SwerveDrive(
         swerveSubsystem,
         () -> m_driverController.getRawAxis(OIConstants.kDriverYAxis),
@@ -64,24 +75,45 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    System.out.println("LogTrial0");
-    double[] xCor1 = { 1, 2, 3 };
-    double[] yCor1 = { 0, 0, 0 };
-    double[] xCor2 = { 3, 3, 3 };
-    double[] yCor2 = { 1, 2, 3 };
-    double[] xCor3 = { 3, 4, 0 };
-    double[] yCor3 = { 3, 4, 0 };
+    // System.out.println("LogTrial0");
+    // double[] xCor1 = { 1, 2, 3 };
+    // double[] yCor1 = { 0, 0, 0 };
+    // double[] xCor2 = { 3, 3, 3 };
+    // double[] yCor2 = { 1, 2, 3 };
+    // double[] xCor3 = { 3, 4, 0 };
+    // double[] yCor3 = { 3, 4, 0 };
 
     //TrajectoryDrive1 commandTraj1 = new TrajectoryDrive1(swerveSubsystem, visionSubsystem, xCor1, yCor1, 0., true);
     // TrajectoryDrive1 commandTraj2 = new TrajectoryDrive1(swerveSubsystem, visionSubsystem, xCor2, yCor2, 0., false);
     // TrajectoryDrive1 commandTraj3 = new TrajectoryDrive1(swerveSubsystem, visionSubsystem, xCor3, yCor3, 0., false);
 
-    return null;//new VisionCommand(visionSubsystem);
+    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond,
+        AutoConstants.kMaxAccelerationMetersPerSecondSquared).setKinematics(DriveConstants.kDriveKinematics);
+
+    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+        new Pose2d(0, 0, new Rotation2d(0)),
+        List.of(
+            new Translation2d(3, 3),
+            new Translation2d(6, 6)),
+        new Pose2d(8, 8, Rotation2d.fromDegrees(0)),
+        trajectoryConfig);
+
+    PIDController xController = new PIDController(0.8, 0.25, 0.005);
+    PIDController yController = new PIDController(0.8, 0.25, 0.005);
+    ProfiledPIDController thetaController = new ProfiledPIDController(
+        1.5, 0.5, 0.0035, AutoConstants.kThetaControllerConstraints);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+        trajectory, swerveSubsystem::getPose, DriveConstants.kDriveKinematics, xController, yController,
+        thetaController,
+        swerveSubsystem::setModuleStatesPID, swerveSubsystem);
+
+    return new SequentialCommandGroup(new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
+        swerveControllerCommand,
+        new InstantCommand(() -> swerveSubsystem.stopModules())); //comment out?
   }
 
-  // public Command getAutonomousCommand() {
-  //   return null;
-  // }
 
   public void allValuesDisplay() {
     swerveSubsystem.allValuesDisplay();

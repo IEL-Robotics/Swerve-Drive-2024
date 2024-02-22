@@ -10,6 +10,7 @@ public class VisionCommand extends Command {
 
     public VisionCommand(Vision m_Vision) {
         this.m_Vision = m_Vision;
+        addRequirements(m_Vision);
     }
 
     @Override

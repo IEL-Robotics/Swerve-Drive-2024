@@ -4,8 +4,11 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -25,6 +28,11 @@ public class SwerveModule {
     private final double absEncOffsetRad;
 
     private final String moduleName;
+
+    /********************************** */
+
+    private SparkPIDController pidVelocity;
+    private SimpleMotorFeedforward feedforwardVelocity;
 
     public SwerveModule(int driveMotorId,int turningMotorId,boolean driveMotorReversed,boolean turningMotorReversed,
     int absoluteEncoderId, double absoluteEncoderOffset,boolean absoluteEncoderReversed, String moduleName){
@@ -69,6 +77,14 @@ public class SwerveModule {
         currentAbsPos = getAbsEncRad() - absEncOffsetRad;
         currentRelativePosition = getAbsEncRad() - absEncOffsetRad;
         coefficient = 0;
+
+        /***************************************************************************************** */
+        pidVelocity = driveMotor.getPIDController();
+        pidVelocity.setP(0.0001);
+        pidVelocity.setI(0.00005);
+        pidVelocity.setD(0.0005);
+        feedforwardVelocity = new SimpleMotorFeedforward(0.667, 2.44, 0.27);
+                    
     }
 
     public double getDrivePosition(){
@@ -102,12 +118,13 @@ public class SwerveModule {
     }
 
     public SwerveModuleState getState(){
-        return new SwerveModuleState(getDrivePosition(), new Rotation2d(getTurningPosition()));
+        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPosition()));//getPosition
     }
+    
 
     public void setState(SwerveModuleState state){
 
-        if (Math.abs(state.speedMetersPerSecond)<0.75){
+        if (Math.abs(state.speedMetersPerSecond)<0.75){ // acaba?
             stop();
             return;
         }
@@ -117,6 +134,16 @@ public class SwerveModule {
         turningMotor.set(pidCont.calculate(getTurningPosition(), state.angle.getRadians()));
     }
 
+    public void setStatePID(SwerveModuleState state){
+        //System.out.println("setStatePID");
+        state = SwerveModuleState.optimize(state, getState().angle);
+        pidVelocity.setReference(state.speedMetersPerSecond, com.revrobotics.CANSparkBase.ControlType.kVelocity, 0, feedforwardVelocity.calculate(state.speedMetersPerSecond));
+        turningMotor.set(pidCont.calculate(getTurningPosition(), state.angle.getRadians()));
+
+    }
+    
+    //PID_VELOCITY.setReference(state.speedMetersPerSecond, ControlType.kVelocity,0,FEEDFORWARD_VELOCITY.calculate(state.speedMetersPerSecond));
+    //SparkPIDController
     public void stop(){
         driveMotor.set(0);
         turningMotor.set(0);

@@ -8,6 +8,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -105,7 +106,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        SmartDashboard.putString("Odometer.getPoseMeters()", odometer.getPoseMeters().toString());
+        SmartDashboard.putString("Odometer.getPoseMeters()", odometer.getPoseMeters().toString()); // !!!
         return odometer.getPoseMeters();
     }
 
@@ -151,6 +152,14 @@ public class SwerveSubsystem extends SubsystemBase {
         frontRight.setState(desiredStates[1]);
         backLeft.setState(desiredStates[2]);
         backRight.setState(desiredStates[3]);
+    }
+
+    public void setModuleStatesPID(SwerveModuleState[] desiredStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);//comment out?
+        frontLeft.setStatePID(desiredStates[0]);
+        frontRight.setStatePID(desiredStates[1]);
+        backLeft.setStatePID(desiredStates[2]);
+        backRight.setStatePID(desiredStates[3]);
     }
 
     public double customSigmoid(double input) { // -1/3 -> Questionable -> Emel kiziyo
