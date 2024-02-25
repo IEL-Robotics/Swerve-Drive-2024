@@ -54,7 +54,6 @@ public class SwerveDrive extends Command {
         // double xSpeed   = (Math.pow(joystickX, 2) * (joystickX<0 ? -1 : 1) /1.0) *   SwerveSubsystemConstants.LIMIT_SOFT_SPEED_DRIVE * (RobotContainer.DRIVER_LT() ? 0.3 : 1);      // * 0.2;
         // double ySpeed   = (Math.pow(joystickY, 2) * (joystickY<0 ? -1 : 1) /1.0) *   SwerveSubsystemConstants.LIMIT_SOFT_SPEED_DRIVE * (RobotContainer.DRIVER_LT() ? 0.3 : 1);      // * 0.2; //Determine new velocity
         // double rotSpeed = (Math.pow(joystickZ, 2) * (joystickZ<0 ? -1 : 1) /1.0)*0.8*SwerveSubsystemConstants.LIMIT_SOFT_SPEED_TURN  * (RobotContainer.DRIVER_LT() ? 0.3 : 1); //* 0.2 to make SLOW */
-
         double xSpeed = SUPPLIER_xSpeed.getAsDouble();
         double ySpeed = SUPPLIER_ySpeed.getAsDouble();
         double rotSpeed = SUPPLIER_zSpeed.getAsDouble();

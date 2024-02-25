@@ -55,8 +55,8 @@ public class SwerveModule extends SubsystemBase {
         MOTOR_DRIVE.setInverted(REVERSE_MOTOR_DRIVE);
         MOTOR_TURN.setInverted(REVERSE_MOTOR_TURN);
 
-        MOTOR_DRIVE.setIdleMode(IdleMode.kBrake);
-        MOTOR_TURN.setIdleMode(IdleMode.kBrake);
+        MOTOR_DRIVE.setIdleMode(IdleMode.kCoast);
+        MOTOR_TURN.setIdleMode(IdleMode.kCoast);
 
         MOTOR_DRIVE.setClosedLoopRampRate(0.0001);
 

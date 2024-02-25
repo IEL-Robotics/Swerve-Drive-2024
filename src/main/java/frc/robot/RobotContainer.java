@@ -1,21 +1,30 @@
 package frc.robot;
 
+import java.lang.module.ModuleDescriptor.Requires;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Debug;
+import frc.robot.commands.Delay;
 import frc.robot.commands.Arm.LowerArm;
 import frc.robot.commands.Arm.RaiseArm;
 import frc.robot.commands.Shooter.Shoot;
 import frc.robot.commands.Swerve.ResetGyro;
 import frc.robot.commands.Swerve.RotateThisMuch;
 import frc.robot.commands.Swerve.RotateToSpecificAngle;
+import frc.robot.commands.Swerve.StopModules;
 import frc.robot.commands.Swerve.SwerveDrive;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -58,14 +67,14 @@ public class RobotContainer {
       )
     );
 
-
+    NamedCommands.registerCommand("Debug", new Debug());
+    NamedCommands.registerCommand("StopModules", new StopModules(SUBSYSTEM_SWERVEDRIVE));
     NamedCommands.registerCommand("ResetModulePosition", SUBSYSTEM_SWERVEDRIVE.zeroModuleAngles());
 
     configureBindings();
   }
 
   private void configureBindings() {
-
     new JoystickButton(JOYSTICK_DRIVER, 2).onTrue(RESET_GYRO);
     //DRIVER_START.whileTrue(SUBSYSTEM_SWERVEDRIVE.zeroModuleAngles());
     //DRIVER_BACK.onTrue(SUBSYSTEM_SWERVEDRIVE.lockDrive());
@@ -86,5 +95,16 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
         return new PathPlannerAuto("New Auto"); //?
+
+        // PathPlannerPath path1 = PathPlannerPath.fromPathFile("Example Path");
+        // PathPlannerPath path2 = PathPlannerPath.fromPathFile("Example Path Reversed");
+
+        // return new SequentialCommandGroup(
+        //   AutoBuilder.followPath(path1),
+        //   new StopModules(SUBSYSTEM_SWERVEDRIVE),
+        //   new WaitCommand(5),
+        //   AutoBuilder.followPath(path2),
+        //   new StopModules(SUBSYSTEM_SWERVEDRIVE)
+        // );
   } 
 }

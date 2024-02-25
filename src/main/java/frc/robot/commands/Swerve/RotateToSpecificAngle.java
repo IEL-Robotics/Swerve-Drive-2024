@@ -1,21 +1,23 @@
 package frc.robot.commands.Swerve;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.KinematicsConstants;
+import frc.robot.Constants.SwerveSubsystemConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RotateToSpecificAngle extends Command {
 
-    public SwerveSubsystem swerveSubsystem;
-    public PIDController pidController = new PIDController(0.25, 0.25, 0.005);
-    ChassisSpeeds chassisSpeeds;
+  public SwerveSubsystem swerveSubsystem;
+  public PIDController pidController = new PIDController(0.25, 0.25, 0.005);
+  ChassisSpeeds chassisSpeeds;
 
-    double error, output, desiredAngle, currentAngle, realDesiredAngle;
-    int kConstant;
-    boolean myInit = true;
+  double output, desiredAngle, currentAngle, realDesiredAngle;
+  int kConstant;
+  boolean myInit = true;
 
   public RotateToSpecificAngle(SwerveSubsystem swerveSubsystem, double desiredAngle) {
     this.swerveSubsystem = swerveSubsystem;
@@ -27,28 +29,33 @@ public class RotateToSpecificAngle extends Command {
   @Override
   public void initialize() {
     kConstant = (int) swerveSubsystem.getRobotHeadingEndless() / 360;
-    realDesiredAngle = (desiredAngle) + (360*kConstant);
+    realDesiredAngle = (desiredAngle) + (360 * kConstant);
+  }
+
+  public void reInit() {
+    kConstant = (int) swerveSubsystem.getRobotHeadingEndless() / 360;
+    realDesiredAngle = (desiredAngle) + (360 * kConstant);
+    pidController.setSetpoint(realDesiredAngle);
+    pidController.setTolerance(5, 10);
+    myInit = false;
   }
 
   @Override
-  public void execute() { //sapma yazilimsal mi anlamak icin turningspd 0 feedle, sonra sur, rotasyonu kapa yani//pid i bitirmesene bi
-    if(myInit){
-      kConstant = (int) swerveSubsystem.getRobotHeadingEndless() / 360;
-      realDesiredAngle = (desiredAngle) + (360*kConstant);
-      myInit = false;
+  public void execute() {
+    if (myInit) {
+      reInit();
     }
 
     currentAngle = swerveSubsystem.getRobotHeadingEndless();
-    output = pidController.calculate(currentAngle, realDesiredAngle);
-    error = realDesiredAngle - currentAngle;
+    output = MathUtil.clamp(pidController.calculate(currentAngle, realDesiredAngle),
+        -SwerveSubsystemConstants.LIMIT_SOFT_SPEED_TURN, SwerveSubsystemConstants.LIMIT_SOFT_SPEED_TURN);
 
-    chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 
-    -swerveSubsystem.customSigmoid(output), swerveSubsystem.getRotation2d());
+    chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, output, swerveSubsystem.getRotation2d());
 
     SwerveModuleState[] moduleStates = KinematicsConstants.KINEMATICS_DRIVE_CHASSIS.toSwerveModuleStates(chassisSpeeds);
 
-    swerveSubsystem.setModuleStates(moduleStates, false); //?
-    swerveSubsystem.updateSayac(); 
+    swerveSubsystem.setModuleStates(moduleStates, false); // ?
+    swerveSubsystem.updateSayac();
 
     System.out.println("Executing rotateToSpecificDeg");
   }
@@ -62,7 +69,6 @@ public class RotateToSpecificAngle extends Command {
 
   @Override
   public boolean isFinished() {
-    if(Math.abs(error) < 5){return true;}
-    else{return false;}
+    return pidController.atSetpoint();
   }
 }

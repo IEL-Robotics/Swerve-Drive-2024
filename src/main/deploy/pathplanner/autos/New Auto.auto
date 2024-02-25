@@ -16,6 +16,37 @@
           "data": {
             "pathName": "Example Path"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopModules"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 6.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Example Path Reversed"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopModules"
+          }
         }
       ]
     }
