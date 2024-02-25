@@ -20,23 +20,30 @@ import frc.robot.commands.Debug;
 import frc.robot.commands.Delay;
 import frc.robot.commands.Arm.LowerArm;
 import frc.robot.commands.Arm.RaiseArm;
+import frc.robot.commands.Pneumatic.PistonClose;
+import frc.robot.commands.Pneumatic.PistonOpen;
 import frc.robot.commands.Shooter.Shoot;
+import frc.robot.commands.Shooter.ShooterStart;
+import frc.robot.commands.Shooter.ShooterStop;
 import frc.robot.commands.Swerve.ResetGyro;
 import frc.robot.commands.Swerve.RotateThisMuch;
 import frc.robot.commands.Swerve.RotateToSpecificAngle;
 import frc.robot.commands.Swerve.StopModules;
 import frc.robot.commands.Swerve.SwerveDrive;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.PneumaticSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
 
   private final static PS4Controller JOYSTICK_DRIVER = new PS4Controller(0);
+  private final static PS4Controller JOYSTICK_COPILOT = new PS4Controller(0);
 
   public final SwerveSubsystem SUBSYSTEM_SWERVEDRIVE = new SwerveSubsystem();
   public final ArmSubsystem SUBSYSTEM_ARM = new ArmSubsystem();
   public final ShooterSubsystem SUBSYSTEM_SHOOTER = new ShooterSubsystem();
+  public final PneumaticSubsystem SUBSYSTEM_PNEUMATIC = new PneumaticSubsystem();
 
   public final ResetGyro RESET_GYRO = new ResetGyro(SUBSYSTEM_SWERVEDRIVE);
   public final RotateThisMuch ROTATE_THIS_MUCH = new RotateThisMuch(SUBSYSTEM_SWERVEDRIVE, 0);
@@ -46,6 +53,11 @@ public class RobotContainer {
   public final RaiseArm RAISE_ARM = new RaiseArm(SUBSYSTEM_ARM);
 
   public final Shoot SHOOT = new Shoot(SUBSYSTEM_SHOOTER);
+  public final ShooterStart SHOOTER_START = new ShooterStart(SUBSYSTEM_SHOOTER);
+  public final ShooterStop SHOOTER_STOP = new ShooterStop(SUBSYSTEM_SHOOTER);
+
+  public final PistonOpen PISTON_OPEN = new PistonOpen(SUBSYSTEM_PNEUMATIC);
+  public final PistonClose PISTON_CLOSE = new PistonClose(SUBSYSTEM_PNEUMATIC);
 
   private final Rotation2d rotation = new Rotation2d(0);
   private final Pose2d pose = new Pose2d(2.5,5.5, rotation);
@@ -78,6 +90,7 @@ public class RobotContainer {
     new JoystickButton(JOYSTICK_DRIVER, 2).onTrue(RESET_GYRO);
     //DRIVER_START.whileTrue(SUBSYSTEM_SWERVEDRIVE.zeroModuleAngles());
     //DRIVER_BACK.onTrue(SUBSYSTEM_SWERVEDRIVE.lockDrive());
+
        // Circle
        new JoystickButton(JOYSTICK_DRIVER, 3).onTrue(ROTATE_THIS_MUCH);
        // Square
