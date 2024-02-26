@@ -16,8 +16,10 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //users 10 photonconfig directory
@@ -105,17 +107,14 @@ public class VisionSubsystem extends SubsystemBase {
         return -1;
     }
 
-    public double getYaw() {
-        result = camera.getLatestResult();
-        if (result.hasTargets()) {
-            target = result.getBestTarget();
+    public Pose2d getPoseOfRobot() {
+        double[] positions = getFieldPosition();
+        return new Pose2d(new Translation2d(positions[0], positions[1]), Rotation2d.fromDegrees(positions[2]));
+    }
 
-            yaw = target.getYaw();
-            SmartDashboard.putNumber("GetYawToTag", yaw);
-
-            return yaw;
-        }
-        return yaw;
+    public boolean gotDataIndeed() {
+        if(values[0] != 0){return true;}
+        else{return false;}
     }
 
 }

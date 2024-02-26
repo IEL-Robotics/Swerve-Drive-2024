@@ -1,5 +1,6 @@
 package frc.robot.commands.Shooter;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -24,7 +25,8 @@ public class Shoot extends Command {
         // double sSpd = sSpdFunction.get();
         // sSpd = sSpd > 0.2 ? sSpd : 0.0;
         // System.out.println(sSpd);
-        shooterSubsystem.runMotors(0.5);
+        shooterSubsystem.debug();
+        shooterSubsystem.runMotors(1);
     }
 
     @Override

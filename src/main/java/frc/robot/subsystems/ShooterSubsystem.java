@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -32,6 +33,10 @@ public class ShooterSubsystem extends SubsystemBase {
     public void runMotors(double spd) {
         leftMotor.set(spd);
         rightMotor.set(spd);
+    }
+    public void debug() {
+        SmartDashboard.putNumber("LeftRPM", leftEncoder.getVelocity());
+        SmartDashboard.putNumber("RightRPM", rightEncoder.getVelocity());
     }
     
 }
