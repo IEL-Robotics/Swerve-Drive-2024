@@ -19,6 +19,7 @@ public class ShooterStart extends Command {
     @Override
     public void execute() {
         shooterSubsystem.runMotors(1);
+        shooterSubsystem.debug();
     }
 
     @Override
@@ -26,6 +27,6 @@ public class ShooterStart extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     }
 }

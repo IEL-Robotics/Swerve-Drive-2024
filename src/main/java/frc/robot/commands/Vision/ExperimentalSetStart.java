@@ -5,16 +5,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 
 public class ExperimentalSetStart extends Command {
 
-    VisionSubsystem visionSubsystem;
     SwerveSubsystem swerveSubsystem;
 
     public ExperimentalSetStart(SwerveSubsystem swerveSubsystem) {
         this.swerveSubsystem = swerveSubsystem;
-        addRequirements(visionSubsystem);
+        addRequirements(swerveSubsystem);
     }
 
     @Override
@@ -23,7 +21,7 @@ public class ExperimentalSetStart extends Command {
 
     @Override
     public void execute() {
-        swerveSubsystem.resetOdometer(new Pose2d(new Translation2d(5.0, 5.0), new Rotation2d(0)));
+        swerveSubsystem.resetOdometer(new Pose2d(new Translation2d(8.0, 0.0), new Rotation2d(0)));
     }
 
     @Override

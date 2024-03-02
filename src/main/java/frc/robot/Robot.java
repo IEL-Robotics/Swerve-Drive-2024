@@ -4,6 +4,12 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -21,6 +27,9 @@ public class Robot extends TimedRobot {
 
   private final Compressor m_Compressor = new Compressor(PneumaticsModuleType.REVPH);
   private final PneumaticsControlModule m_Pcm = new PneumaticsControlModule();
+
+  public TalonSRX intakeMotor = new TalonSRX(13);
+  public RelativeEncoder intakeEncoder;
 
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
@@ -93,6 +102,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     m_robotContainer.SUBSYSTEM_SWERVEDRIVE.updateSayac();
+    m_robotContainer.SUBSYSTEM_VISION.visionCompare();
+    // m_robotContainer.SUBSYSTEM_VISION.getFieldPosition();
+    // m_robotContainer.SUBSYSTEM_VISION.getFieldPosition2();
   }
 
   @Override

@@ -55,8 +55,8 @@ public class SwerveModule extends SubsystemBase {
         MOTOR_DRIVE.setInverted(REVERSE_MOTOR_DRIVE);
         MOTOR_TURN.setInverted(REVERSE_MOTOR_TURN);
 
-        MOTOR_DRIVE.setIdleMode(IdleMode.kCoast);
-        MOTOR_TURN.setIdleMode(IdleMode.kCoast);
+        MOTOR_DRIVE.setIdleMode(IdleMode.kBrake);
+        MOTOR_TURN.setIdleMode(IdleMode.kBrake);
 
         MOTOR_DRIVE.setClosedLoopRampRate(0.0001);
 
@@ -91,7 +91,7 @@ public class SwerveModule extends SubsystemBase {
 
     public void moduleData2Dashboard(){
         //SmartDashboard.putNumber(String.format("%s AbsPos", MODULE_NAME), Math.toDegrees(getTurningPosition()));
-        SmartDashboard.putNumber(MODULE_NAME + " Encoder",getDrivePosition());
+        //SmartDashboard.putNumber(MODULE_NAME + " Encoder",getDrivePosition());
     }
 
     public boolean checkIdle() {

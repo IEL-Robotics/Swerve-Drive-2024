@@ -35,22 +35,33 @@ public final class Constants {
 
 
     // DRIVE Motor Ports
-    public static final int ID_FRONT_LEFT_DRIVE = 51;
-    public static final int ID_BACK_LEFT_DRIVE = 54;
-    public static final int ID_FRONT_RIGHT_DRIVE = 52;
-    public static final int ID_BACK_RIGHT_DRIVE = 53;
+    // public static final int ID_FRONT_LEFT_DRIVE = 51;//53
+    // public static final int ID_BACK_LEFT_DRIVE = 54; //52
+    // public static final int ID_FRONT_RIGHT_DRIVE = 52;//54
+    // public static final int ID_BACK_RIGHT_DRIVE = 53; //51
+
+    // // TURNING Motor Ports
+    // public static final int ID_FRONT_LEFT_TURN = 31;//33
+    // public static final int ID_BACK_LEFT_TURN = 34;//32
+    // public static final int ID_FRONT_RIGHT_TURN = 32;//34
+    // public static final int ID_BACK_RIGHT_TURN = 33; //31
+
+    public static final int ID_FRONT_LEFT_DRIVE = 53;
+    public static final int ID_BACK_LEFT_DRIVE = 52;
+    public static final int ID_FRONT_RIGHT_DRIVE = 54;
+    public static final int ID_BACK_RIGHT_DRIVE = 51;
 
     // TURNING Motor Ports
-    public static final int ID_FRONT_LEFT_TURN = 31;
-    public static final int ID_BACK_LEFT_TURN = 34;
-    public static final int ID_FRONT_RIGHT_TURN = 32;
-    public static final int ID_BACK_RIGHT_TURN = 33;
+    public static final int ID_FRONT_LEFT_TURN = 33;
+    public static final int ID_BACK_LEFT_TURN = 32;
+    public static final int ID_FRONT_RIGHT_TURN = 34;
+    public static final int ID_BACK_RIGHT_TURN = 31;
 
     // CANCoder Ids
-    public static final int ID_FRONT_LEFT_ENCODER_ABSOLUTE = 0;
-    public static final int ID_BACK_LEFT_ENCODER_ABSOLUTE = 3;
-    public static final int ID_FRONT_RIGHT_ENCODER_ABSOLUTE = 1;
-    public static final int ID_BACK_RIGHT_ENCODER_ABSOLUTE = 2;
+    public static final int ID_FRONT_LEFT_ENCODER_ABSOLUTE = 2; //0
+    public static final int ID_BACK_LEFT_ENCODER_ABSOLUTE = 1;//3
+    public static final int ID_FRONT_RIGHT_ENCODER_ABSOLUTE = 3;//1
+    public static final int ID_BACK_RIGHT_ENCODER_ABSOLUTE = 0;//2
 
     // Invert booleans | We use MK4i modules so the turning motors are inverted
     public static final boolean REVERSED_ENCODER_TURN = true;
@@ -59,27 +70,27 @@ public final class Constants {
     public static final boolean REVERSED_GYRO = false;
 
     // Invert Specific Motors
-    public static final boolean REVERSED_FRONT_LEFT_MOTOR_DRIVE = false;
-    public static final boolean REVERSED_FRONT_RIGHT_MOTOR_DRIVE = true;
-    public static final boolean REVERSED_BACK_LEFT_MOTOR_DRIVE = false;
-    public static final boolean REVERSED_BACK_RIGHT_MOTOR_DRIVE = true;
+    public static final boolean REVERSED_FRONT_LEFT_MOTOR_DRIVE = true;//f
+    public static final boolean REVERSED_FRONT_RIGHT_MOTOR_DRIVE = false;//t
+    public static final boolean REVERSED_BACK_LEFT_MOTOR_DRIVE = true;//f
+    public static final boolean REVERSED_BACK_RIGHT_MOTOR_DRIVE = false;//t
 
     // Turning encoder offsets
-    public static final double OFFSET_FRONT_LEFT_ENCODER_ABSOLUTE = -1.88758;
-    public static final double OFFSET_BACK_LEFT_ENCODER_ABSOLUTE  = -2.5;
-    public static final double OFFSET_FRONT_RIGHT_ENCODER_ABSOLUTE= -2.91636;
-    public static final double OFFSET_BACK_RIGHT_ENCODER_ABSOLUTE = 1.88506;
+    public static final double OFFSET_FRONT_LEFT_ENCODER_ABSOLUTE = 1.88506; //-1.88758;
+    public static final double OFFSET_BACK_LEFT_ENCODER_ABSOLUTE  = -2.91636; //-2.5;
+    public static final double OFFSET_FRONT_RIGHT_ENCODER_ABSOLUTE= -2.5; //-2.91636;
+    public static final double OFFSET_BACK_RIGHT_ENCODER_ABSOLUTE = -1.88758;//1.88506;
 
     // Robot drive speeds
     public static final double LIMIT_HARD_SPEED_DRIVE = 3.6; // hard limit for speed of chassis
-    public static final double LIMIT_SOFT_SPEED_DRIVE = 2.4; // soft limit for speed of chassis
+    public static final double LIMIT_SOFT_SPEED_DRIVE = 1.4; //2.4 soft limit for speed of chassis
 
     // Robot turning speeds
     public static final double LIMIT_SOFT_SPEED_TURN = 1 * 2*Math.PI; // soft limit for module rotation
 
     // Robot acceleration
-    public static final double LIMIT_SOFT_ACCELERATION_SPEED = 1; // soft limit for acceleration (M/S^2)
-    public static final double LIMIT_SOFT_ACCELERATION_TURN = 1;  // soft limit for acceleration (M/S^2)
+    public static final double LIMIT_SOFT_ACCELERATION_SPEED = 0.6; //1 soft limit for acceleration (M/S^2)
+    public static final double LIMIT_SOFT_ACCELERATION_TURN = 0.6;  //1 soft limit for acceleration (M/S^2)
   }
 
   public static class ArmConstants{

@@ -48,7 +48,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("MagEncoder Left Value", leftMotor.getSelectedSensorPosition());
+        // SmartDashboard.putNumber("MagEncoder Left Value", leftMotor.getSelectedSensorPosition());
         SmartDashboard.putNumber("MagEncoder Right Value", rightMotor.getSelectedSensorPosition());
     }
 

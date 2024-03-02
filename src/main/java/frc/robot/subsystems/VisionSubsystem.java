@@ -30,9 +30,11 @@ public class VisionSubsystem extends SubsystemBase {
 
     private AprilTagFieldLayout aprilTagFieldLayout;
 
-    private Transform3d camera2Robot = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0, 0, 0)); // madeup
-                                                                                                                   // //
-                                                                                                                   // value
+    //private Transform3d camera2Robot = new Transform3d(new Translation3d(0.332, -0.25, 0.32), new Rotation3d(0, -0.66185, -0.5235)); // madeup
+                                                                                                                   // // pitch -45, yaw -35.5, 33.041
+     
+    private Transform3d camera2Robot= new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(Math.toRadians(0.1), Math.toRadians(-42.88), Math.toRadians(-32.4)));                                                                                                            
+    private Transform3d camera2Robot2 =  new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0,0, 0));                                                                                                         // value
     private PhotonPipelineResult result;
     private PhotonTrackedTarget target;
     private Pose3d robotPose;
@@ -68,11 +70,15 @@ public class VisionSubsystem extends SubsystemBase {
             if (target.getFiducialId() != -1) {
                 robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
                         aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), camera2Robot);
-                x = robotPose.getTranslation().getX();
-                y = robotPose.getTranslation().getY();
-                angle = robotPose.getRotation().getAngle();
+                x = robotPose.getX();
+                y = robotPose.getY();
+                angle = Math.toDegrees(robotPose.getRotation().getAngle());
 
                 SmartDashboard.putNumber("AprilTag ID:", target.getFiducialId());
+
+                SmartDashboard.putNumber("X in FieldN", x);
+                SmartDashboard.putNumber("Y in FieldN", y);
+                SmartDashboard.putNumber("Angle in FieldN", angle);
             }
         }
 
@@ -80,9 +86,32 @@ public class VisionSubsystem extends SubsystemBase {
         values[1] = y;
         values[2] = angle;
 
-        SmartDashboard.putNumber("X in Field", values[0]);
-        SmartDashboard.putNumber("Y in Field", values[1]);
-        SmartDashboard.putNumber("Angle in Field", values[2]);
+        return values;
+    }
+
+        public double[] getFieldPosition2() {
+        result = camera.getLatestResult();
+        if (result.hasTargets()) {
+            target = result.getBestTarget();
+            if (target.getFiducialId() != -1) {
+                robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
+                        aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), camera2Robot2);
+                x = robotPose.getX();
+                y = robotPose.getY();
+                angle = Math.toDegrees(robotPose.getRotation().getAngle());
+
+                // SmartDashboard.putNumber("X Alternative", x + 0.355);
+                // SmartDashboard.putNumber("Y Alternative", y + 0.25);
+                // SmartDashboard.putNumber("Angle Alternative", angle + 13);
+                SmartDashboard.putNumber("X AlternativeN", x);
+                SmartDashboard.putNumber("Y AlternativeN", y);
+                SmartDashboard.putNumber("Angle AlternativeN", angle);
+            }
+        }
+
+        values[0] = x;
+        values[1] = y;
+        values[2] = angle;
 
         return values;
     }
@@ -115,6 +144,34 @@ public class VisionSubsystem extends SubsystemBase {
     public boolean gotDataIndeed() {
         if(values[0] != 0){return true;}
         else{return false;}
+    }
+
+    public void visionCompare() {
+        result = camera.getLatestResult();
+        if (result.hasTargets()) {
+            target = result.getBestTarget();
+            if (target.getFiducialId() != -1) {
+                Pose3d robotPose1 = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
+                        aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), camera2Robot2);
+
+                Pose3d robotPoseRaw = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
+                        aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), camera2Robot);
+
+                SmartDashboard.putNumber("AprilTag ID:", target.getFiducialId());
+
+                SmartDashboard.putNumber("X Raw", robotPoseRaw.getX());
+                SmartDashboard.putNumber("Y Raw", robotPoseRaw.getY());
+                SmartDashboard.putNumber("Angle Raw", Math.toDegrees(robotPoseRaw.getRotation().getAngle()));
+
+                SmartDashboard.putNumber("X 1", robotPose1.getX());
+                SmartDashboard.putNumber("Y 1", robotPose1.getY());
+                SmartDashboard.putNumber("Angle 1", Math.toDegrees(robotPose1.getRotation().getAngle()));
+
+                SmartDashboard.putNumber("CamToTarget angle", target.getBestCameraToTarget().getRotation().toRotation2d().getDegrees());
+                SmartDashboard.putString("CamToTarget", target.getBestCameraToTarget().toString());
+                SmartDashboard.putNumber("TargetPitch", target.getPitch());
+            }
+        }
     }
 
 }

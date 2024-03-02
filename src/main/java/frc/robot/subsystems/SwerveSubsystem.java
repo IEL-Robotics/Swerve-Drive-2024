@@ -111,8 +111,8 @@ public class SwerveSubsystem extends SubsystemBase {
                 this::getChassisSpeeds,
                 this::setAutoChassisSpeed,
                 new HolonomicPathFollowerConfig(
-                    new PIDConstants(5, 0.1, 0.0),
-                    new PIDConstants(5, 0.1, 0.0),
+                    new PIDConstants(5, 0.0, 0.0),
+                    new PIDConstants(5, 0.0, 0.0),
                     3.4,
                     KinematicsConstants.RADIUS_DRIVE_CHASSIS, // Drive base radius in meters. Distance from robot center to furthest module.
                         new ReplanningConfig(
@@ -188,7 +188,6 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getRotation2d() {
-        //System.out.println(getRobotHeading());
         SmartDashboard.putNumber("Gyro", getRobotHeading());
         return Rotation2d.fromDegrees(getRobotHeading());
     }

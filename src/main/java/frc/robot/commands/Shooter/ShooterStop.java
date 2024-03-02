@@ -19,6 +19,7 @@ public class ShooterStop extends Command {
     @Override
     public void execute() {
         shooterSubsystem.runMotors(0);
+        shooterSubsystem.debug();
     }
 
     @Override

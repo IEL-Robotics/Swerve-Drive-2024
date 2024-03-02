@@ -6,6 +6,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -13,10 +15,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private CANSparkMax leftMotor, rightMotor;
     private RelativeEncoder leftEncoder, rightEncoder;
+    private PowerDistribution pdp;
 
     public ShooterSubsystem() {
         leftMotor = new CANSparkMax(6, MotorType.kBrushless);
         rightMotor = new CANSparkMax(4, MotorType.kBrushless);
+        pdp = new PowerDistribution(2, ModuleType.kRev);
 
         // rightMotor.follow(leftMotor);
 
@@ -34,9 +38,22 @@ public class ShooterSubsystem extends SubsystemBase {
         leftMotor.set(spd);
         rightMotor.set(spd);
     }
-    public void debug() {
+
+    @Override
+    public void periodic() {
         SmartDashboard.putNumber("LeftRPM", leftEncoder.getVelocity());
         SmartDashboard.putNumber("RightRPM", rightEncoder.getVelocity());
+        if(leftEncoder.getVelocity() > 3500){
+            System.out.println("Voltage: "+ pdp.getVoltage());
+            //System.out.println("Current: "+ pdp.getCurrent(0));
+            System.out.println(leftEncoder.getVelocity()+ " & " + rightEncoder.getVelocity());
+        }
+    }
+
+    public double[] debug() {
+        SmartDashboard.putNumber("LeftRPM", leftEncoder.getVelocity());
+        SmartDashboard.putNumber("RightRPM", rightEncoder.getVelocity());
+        return new double[]{leftEncoder.getVelocity(), rightEncoder.getVelocity()};
     }
     
 }

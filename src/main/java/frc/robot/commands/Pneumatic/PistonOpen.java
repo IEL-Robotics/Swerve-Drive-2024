@@ -19,6 +19,7 @@ public class PistonOpen extends Command {
 
     @Override
     public void execute() {
+        System.out.println("PISTON OPENED");
         pneumaticSubsystem.pistonOpen();
     }
 

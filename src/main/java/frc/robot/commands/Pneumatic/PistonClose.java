@@ -19,6 +19,7 @@ public class PistonClose extends Command {
 
     @Override
     public void execute() {
+        System.out.println("PISTON CLOSED");
         pneumaticSubsystem.pistonClose();
     }
 

@@ -67,10 +67,11 @@ public class SwerveDrive extends Command {
         rotSpeed = zLimiter.calculate(rotSpeed) * SwerveSubsystemConstants.LIMIT_SOFT_SPEED_TURN;
 
         //subsystem.updateSayac();
-        SmartDashboard.putNumber("xSpeed", xSpeed);
-        SmartDashboard.putNumber("ySpeed", ySpeed);
-        SmartDashboard.putNumber("rotSpeed", rotSpeed);
+        // SmartDashboard.putNumber("xSpeed", xSpeed);
+        // SmartDashboard.putNumber("ySpeed", ySpeed);
+        // SmartDashboard.putNumber("rotSpeed", rotSpeed);
         ChassisSpeeds chassisSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotSpeed, subsystem.getRotation2d());
+        //ChassisSpeeds chassisSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, subsystem.getRotation2d());
         subsystem.setChassisSpeed(chassisSpeed,true);
     }
 

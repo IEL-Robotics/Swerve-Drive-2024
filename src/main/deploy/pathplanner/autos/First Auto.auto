@@ -2,25 +2,19 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.0,
-      "y": 1.0
+      "x": 1.38,
+      "y": 5.55
     },
-    "rotation": 0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "ExperimentalStart"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "First Path"
           }
         },
         {
@@ -30,22 +24,33 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "wait",
           "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 6.0
-                }
-              }
-            ]
+            "waitTime": 3.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "Second Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopModules"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Third Path"
           }
         },
         {
