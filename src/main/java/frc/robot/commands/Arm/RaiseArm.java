@@ -17,7 +17,7 @@ public class RaiseArm extends Command {
 
     @Override
     public void execute() {
-        armSubsystem.armSet(1);
+        armSubsystem.armSet(0.75);
     }
 
     @Override

@@ -102,7 +102,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     m_robotContainer.SUBSYSTEM_SWERVEDRIVE.updateSayac();
-    m_robotContainer.SUBSYSTEM_VISION.visionCompare();
+    m_robotContainer.SUBSYSTEM_VISION.getFieldPosition();
     // m_robotContainer.SUBSYSTEM_VISION.getFieldPosition();
     // m_robotContainer.SUBSYSTEM_VISION.getFieldPosition2();
   }

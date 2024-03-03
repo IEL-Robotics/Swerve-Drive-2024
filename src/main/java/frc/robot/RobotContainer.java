@@ -106,12 +106,14 @@ public class RobotContainer {
 
     //new JoystickButton(JOYSTICK_DRIVER, 1).onTrue(new PresetArm(SUBSYSTEM_ARM, 0)); // Square - Intake
     //new JoystickButton(JOYSTICK_DRIVER, 2).onTrue(new PresetArm(SUBSYSTEM_ARM, 0)); // Cross - Shoot
-    //new JoystickButton(JOYSTICK_DRIVER, 3).onTrue(new PresetArm(SUBSYSTEM_ARM, 0)); // Circle - Amplifier // R1
+    new JoystickButton(JOYSTICK_DRIVER, 2).onTrue(new PresetArm(SUBSYSTEM_ARM, 2095)); // Cross - Amplifier // R1
+    new JoystickButton(JOYSTICK_DRIVER, 1).onTrue(new PresetArm(SUBSYSTEM_ARM, 985)); //Square - Intake
     new JoystickButton(JOYSTICK_DRIVER, 10).onTrue(RESET_GYRO); // Options
 
     new JoystickButton(JOYSTICK_COPILOT, 1).onTrue(PISTON_OPEN);
     new JoystickButton(JOYSTICK_COPILOT, 3).onTrue(PISTON_CLOSE);
-    new JoystickButton(JOYSTICK_COPILOT, 5).onTrue(SHOOTER_START);
+    //new JoystickButton(JOYSTICK_COPILOT, 5).onTrue(SHOOTER_START);
+    new JoystickButton(JOYSTICK_COPILOT, 5).onTrue(new PresetArm(SUBSYSTEM_ARM, 1300));
     new JoystickButton(JOYSTICK_COPILOT, 6).onTrue(SHOOTER_CHAIN);
     //new JoystickButton(JOYSTICK_COPILOT, 6).onTrue(SHOOTER_CHAIN);
 

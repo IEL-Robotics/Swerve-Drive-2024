@@ -24,9 +24,9 @@ public class VisionSetStart extends Command {
 
     @Override
     public void execute() {
-        double[] positions = visionSubsystem.getFieldPosition2();
-        //swerveSubsystem.resetOdometer(new Pose2d(new Translation2d(positions[0], positions[1]), new Rotation2d(Math.toRadians(positions[2]))));
-        swerveSubsystem.resetOdometer(new Pose2d(new Translation2d(1.28, 5.55), new Rotation2d(0)));
+        double[] positions = visionSubsystem.getFieldPosition();
+        swerveSubsystem.resetOdometer(new Pose2d(new Translation2d(positions[0], positions[1]), new Rotation2d(Math.toRadians(positions[2]))));
+        //swerveSubsystem.resetOdometer(new Pose2d(new Translation2d(1.28, 5.55), new Rotation2d(0)));
     }
 
     @Override
