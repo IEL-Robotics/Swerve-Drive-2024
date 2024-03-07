@@ -1,9 +1,7 @@
 package frc.robot.commands.Arm;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.SwerveSubsystemConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class PresetArm extends Command {
@@ -11,7 +9,7 @@ public class PresetArm extends Command {
     public ArmSubsystem armSubsystem;
     double presetValue;
 
-    public PIDController pidController = new PIDController(0.05, 0.01, 0.0); // i cok iyi, range ekle sadece, ve arttir
+    public PIDController pidController = new PIDController(0.05, 0.015, 0.0); // i cok iyi, range ekle sadece, ve arttir
     boolean myInit = true;
 
     public PresetArm(ArmSubsystem armSubsystem, double presetValue) {
@@ -39,12 +37,13 @@ public class PresetArm extends Command {
     @Override
     public void execute() {
         if(myInit){reInit();}
-        //armSubsystem.armSet(MathUtil.clamp(pidController.calculate(armSubsystem.getRightEncoderVal()), -1, 1));
-        armSubsystem.armSet(customSigmoid(pidController.calculate(armSubsystem.getRightEncoderVal()))*0.95);
+        //armSubsystem.armSet(MathUtil.clamp(pidController.calculate(armSubsystem.getRightEncoderVal()), -0.65, 0.65));
+        armSubsystem.armSet(customSigmoid(pidController.calculate(armSubsystem.getRightEncoderVal())));
     }
 
     @Override
     public void end(boolean interrupted) {
+        System.out.println("PRESET REACHED!!!");
         armSubsystem.armSet(0);
         myInit = true;
     }

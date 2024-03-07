@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import javax.lang.model.element.ModuleElement;
+
 //rev
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -65,6 +68,9 @@ public class SwerveModule extends SubsystemBase {
 
         ENCODER_DRIVE.setPositionConversionFactor(ModuleConstants.MODULE_DRIVE_ROTATIONS_TO_METERS);
         ENCODER_DRIVE.setVelocityConversionFactor(ModuleConstants.MODULE_DRIVE_RPM_TO_MPS);
+
+        ENCODER_DRIVE.setPosition(0.0);
+
         ENCODER_TURN.setPositionConversionFactor(ModuleConstants.MODULE_TURN_ROTATIONS_TO_RADIANS);
         ENCODER_TURN.setVelocityConversionFactor(ModuleConstants.TurningEncoderRPM2RadPerSec);
 
@@ -104,6 +110,7 @@ public class SwerveModule extends SubsystemBase {
     }
     
     public void resetDriveEncoders(){
+        System.out.println("AA");
         ENCODER_DRIVE.setPosition(0.0);
     }
 
@@ -131,6 +138,7 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public double getDrivePosition(){
+        SmartDashboard.putNumber(MODULE_NAME, ENCODER_DRIVE.getPosition());
         return ENCODER_DRIVE.getPosition();
     }
 

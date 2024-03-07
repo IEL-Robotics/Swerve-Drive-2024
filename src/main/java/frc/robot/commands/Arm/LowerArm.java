@@ -8,7 +8,7 @@ public class LowerArm extends Command {
 
     public LowerArm(ArmSubsystem armSubsystem) {
         this.armSubsystem = armSubsystem;
-        addRequirements();
+        addRequirements(armSubsystem);
     }
 
     @Override
@@ -17,7 +17,8 @@ public class LowerArm extends Command {
 
     @Override
     public void execute() {
-        armSubsystem.armSet(-0.5);
+        // -0.5 idi
+        armSubsystem.armSet(-0.8);
     }
 
     @Override

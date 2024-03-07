@@ -8,7 +8,7 @@ public class RaiseArm extends Command {
 
     public RaiseArm(ArmSubsystem armSubsystem) {
         this.armSubsystem = armSubsystem;
-        addRequirements();
+        addRequirements(armSubsystem);
     }
 
     @Override

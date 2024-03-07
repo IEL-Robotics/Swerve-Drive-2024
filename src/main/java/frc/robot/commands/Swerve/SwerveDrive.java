@@ -20,15 +20,19 @@ public class SwerveDrive extends Command {
     private final DoubleSupplier SUPPLIER_ySpeed;
     private final DoubleSupplier SUPPLIER_zSpeed;
 
+    private final BooleanSupplier SUPPPLIER_fieldOriented;
+
     private final SlewRateLimiter xLimiter, yLimiter, zLimiter;
 
-    public SwerveDrive(SwerveSubsystem m_subsystem, DoubleSupplier xSpeed, DoubleSupplier ySpeed,
+    public SwerveDrive(SwerveSubsystem subsystem, DoubleSupplier xSpeed, DoubleSupplier ySpeed,
         DoubleSupplier zSpeed, BooleanSupplier Field_Oriented){
 
-        this.subsystem = m_subsystem;
+        this.subsystem = subsystem;
         this.SUPPLIER_xSpeed = xSpeed;
         this.SUPPLIER_ySpeed = ySpeed;
         this.SUPPLIER_zSpeed = zSpeed;
+
+        this.SUPPPLIER_fieldOriented = Field_Oriented;
         
         addRequirements(subsystem);
 
@@ -70,9 +74,14 @@ public class SwerveDrive extends Command {
         // SmartDashboard.putNumber("xSpeed", xSpeed);
         // SmartDashboard.putNumber("ySpeed", ySpeed);
         // SmartDashboard.putNumber("rotSpeed", rotSpeed);
-        ChassisSpeeds chassisSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotSpeed, subsystem.getRotation2d());
-        //ChassisSpeeds chassisSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, subsystem.getRotation2d());
-        subsystem.setChassisSpeed(chassisSpeed,true);
+        if(!(SUPPPLIER_fieldOriented.getAsBoolean())){
+            ChassisSpeeds chassisSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotSpeed, subsystem.getRotation2d());
+            subsystem.setChassisSpeed(chassisSpeed,true);
+        }
+        else{
+            ChassisSpeeds chassisSpeed = new ChassisSpeeds(xSpeed, ySpeed, rotSpeed);
+            subsystem.setChassisSpeed(chassisSpeed,true);
+        }
     }
 
     @Override

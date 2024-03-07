@@ -6,9 +6,11 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class ShooterStart extends Command {
     
     public ShooterSubsystem shooterSubsystem;
+    public double Spd;
 
-    public ShooterStart(ShooterSubsystem shooterSubsystem) {
+    public ShooterStart(ShooterSubsystem shooterSubsystem, double Spd) {
         this.shooterSubsystem = shooterSubsystem;
+        this.Spd = Spd;
         addRequirements(shooterSubsystem);
     }
 
@@ -18,7 +20,7 @@ public class ShooterStart extends Command {
 
     @Override
     public void execute() {
-        shooterSubsystem.runMotors(1);
+        shooterSubsystem.runMotors(Spd);
         shooterSubsystem.debug();
     }
 

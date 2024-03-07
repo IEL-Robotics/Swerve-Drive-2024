@@ -4,16 +4,21 @@
 
 package frc.robot;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -34,6 +39,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
 
+  private UsbCamera camera;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -42,6 +49,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    //camera = CameraServer.startAutomaticCapture();
+    //camera.setResolution(640, 480);
     m_Pcm.enableCompressorDigital();
     m_Compressor.enableDigital();
     m_robotContainer = new RobotContainer();
@@ -103,6 +112,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     m_robotContainer.SUBSYSTEM_SWERVEDRIVE.updateSayac();
     m_robotContainer.SUBSYSTEM_VISION.getFieldPosition();
+    SmartDashboard.putNumber("Center Meters Left",m_robotContainer.SUBSYSTEM_VISION.centerTag());
     // m_robotContainer.SUBSYSTEM_VISION.getFieldPosition();
     // m_robotContainer.SUBSYSTEM_VISION.getFieldPosition2();
   }
