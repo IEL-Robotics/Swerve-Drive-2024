@@ -107,7 +107,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Debug", new Debug());
     NamedCommands.registerCommand("StopModules", new StopModules(SUBSYSTEM_SWERVEDRIVE));
     NamedCommands.registerCommand("ResetModulePosition", SUBSYSTEM_SWERVEDRIVE.zeroModuleAngles());
-    NamedCommands.registerCommand("VisionStart", new VisionSetStart(SUBSYSTEM_VISION, SUBSYSTEM_SWERVEDRIVE));
+    NamedCommands.registerCommand("VisionStart", new VisionSetStart(SUBSYSTEM_VISION, SUBSYSTEM_SWERVEDRIVE).withTimeout(2));
     NamedCommands.registerCommand("CenterAim1", CENTER_SPEAKER.withTimeout(2));
     NamedCommands.registerCommand("CenterAim2", AIM.withTimeout(2));
     NamedCommands.registerCommand("ArmToIntake", new PresetArm(SUBSYSTEM_ARM, -1235).withTimeout(2));
