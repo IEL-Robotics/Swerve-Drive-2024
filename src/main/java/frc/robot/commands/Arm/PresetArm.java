@@ -9,13 +9,17 @@ public class PresetArm extends Command {
     public ArmSubsystem armSubsystem;
     double presetValue;
 
-    public PIDController pidController = new PIDController(0.05, 0.015, 0.0); // i cok iyi, range ekle sadece, ve arttir
+    //public PIDController pidController = new PIDController(0.05, 0.015, 0.0); // i cok iyi, range ekle sadece, ve arttir
+                                                  
+   
+    public PIDController pidController=new PIDController(0.05,0.01,0.0); // imetin pid
+    //public PIDController pidController=new PIDController(0.05,0.015 ,0.004); //ben pid
     boolean myInit = true;
 
     public PresetArm(ArmSubsystem armSubsystem, double presetValue) {
         this.armSubsystem = armSubsystem;
         this.presetValue = presetValue;
-        pidController.setIZone(25);
+        pidController.setIZone(20);
         addRequirements(armSubsystem);
     }
 
@@ -25,7 +29,7 @@ public class PresetArm extends Command {
 
     public void reInit() {
         pidController.setSetpoint(presetValue);
-        pidController.setTolerance(5, 10);
+        pidController.setTolerance(5, 5);
         myInit = false;
     }
 
@@ -36,9 +40,10 @@ public class PresetArm extends Command {
 
     @Override
     public void execute() {
+        System.out.println("ArmToPreset Running and Blocking");
         if(myInit){reInit();}
-        //armSubsystem.armSet(MathUtil.clamp(pidController.calculate(armSubsystem.getRightEncoderVal()), -0.65, 0.65));
-        armSubsystem.armSet(customSigmoid(pidController.calculate(armSubsystem.getRightEncoderVal())));
+        //armSubsystem.armSet(MathUtil.clamp(pidController.calculate(armSubsystem.getLeftEncoderVal()), -0.65, 0.65));
+        armSubsystem.armSet(customSigmoid(pidController.calculate(armSubsystem.getLeftEncoderVal())));
     }
 
     @Override

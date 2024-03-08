@@ -37,7 +37,7 @@ public class VisionSubsystem extends SubsystemBase {
      
     //private Transform3d camera2Robot= new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0));
     //private Transform3d camera2Robot= new Transform3d(new Translation3d(-0.35, -0.25, 0.29), new Rotation3d(Math.toRadians(0), Math.toRadians(-45.6), Math.toRadians(0)));
-    private Transform3d camera2Robot= new Transform3d(new Translation3d(-0.35, -0.25, 0.30), new Rotation3d(Math.toRadians(5.5), Math.toRadians(-36.5), Math.toRadians(149)));
+    private Transform3d camera2Robot= new Transform3d(new Translation3d(-0.35, -0.25, 0), new Rotation3d(Math.toRadians(-0.25), Math.toRadians(-35.8), Math.toRadians(159.5)));
     private PhotonPipelineResult result;
     private PhotonTrackedTarget target;
     private Pose3d robotPose;
@@ -66,11 +66,25 @@ public class VisionSubsystem extends SubsystemBase {
         return photonPoseEstimator.update();
     }
 
+    public void displayCameraPos() {
+        result = camera.getLatestResult();
+        if(result.hasTargets()){
+            target = result.getBestTarget();
+            if(target.getFiducialId() != -1){
+                    robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
+                        aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(Math.toRadians(0), Math.toRadians(0), Math.toRadians(0))));
+
+                        SmartDashboard.putString("RobotPose of Cam DEBUG", robotPose.toString());
+            }
+        }
+    }
+
     public double[] getFieldPosition() {
         result = camera.getLatestResult();
         if (result.hasTargets()) {
             target = result.getBestTarget();
             if (target.getFiducialId() != -1) {
+                displayCameraPos();
                 robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
                         aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), camera2Robot);
                 
@@ -80,7 +94,7 @@ public class VisionSubsystem extends SubsystemBase {
                 y = robotPose.getY();
                 //angle = Math.toDegrees(robotPose.getRotation().getAngle());
 
-                angle = getAngleViaId((target.getBestCameraToTarget().getRotation().getAngle() * 180.0/Math.PI) + 26, target.getFiducialId());
+                angle = getAngleViaId((target.getBestCameraToTarget().getRotation().getAngle() * 180.0/Math.PI) + 8, target.getFiducialId());
                 SmartDashboard.putNumber("AprilTag ID:", target.getFiducialId());
 
                 SmartDashboard.putNumber("X for Camera", x);
@@ -102,11 +116,8 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public double getAngleViaId(double yaw ,int id){
-        if(id == 3 || id == 4){
+        if(id == 3 || id == 4 || id == 7 || id == 8){
             return yaw - 180;
-        }
-        else if(id == 7 || id == 8){
-            return yaw >= 180 ? yaw - 360 : yaw;
         }
         else{
             return 0;

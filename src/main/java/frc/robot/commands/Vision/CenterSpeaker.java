@@ -57,7 +57,7 @@ public class CenterSpeaker extends Command {
 
     currentAngle = swerveSubsystem.getRobotHeadingEndless();
     output = MathUtil.clamp(pidController.calculate(currentAngle, realDesiredAngle),
-        -0.5, SwerveSubsystemConstants.LIMIT_SOFT_SPEED_TURN * 0.5);
+        -1, 1);
 
     chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, -output, swerveSubsystem.getRotation2d());
 

@@ -2,9 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,12 +11,14 @@ import frc.robot.Constants.ArmConstants;
 
 public class ArmSubsystem extends SubsystemBase {
 
-    public VictorSPX leftMotor;
-    public TalonSRX rightMotor;
+    public TalonSRX leftMotor,rightMotor;
     public PIDController leftPID, rightPID;
 
+    public double armEncoderVariable = 0;
+    public double armEncoderOffset = 0;
+
     public ArmSubsystem() {
-        leftMotor = new VictorSPX(ArmConstants.ID_LEFT_ARM);
+        leftMotor = new TalonSRX(ArmConstants.ID_LEFT_ARM);
         rightMotor = new TalonSRX(ArmConstants.ID_RIGHT_ARM);
 
         rightMotor.follow(leftMotor);
@@ -31,10 +31,12 @@ public class ArmSubsystem extends SubsystemBase {
 
         leftPID = new PIDController(0, 0, 0);
         rightPID = new PIDController(0, 0, 0);
+
+        armEncoderOffset =leftMotor.getSelectedSensorPosition();
     }
 
     public void armSet(double output) {
-        leftMotor.set(VictorSPXControlMode.PercentOutput, output);
+        leftMotor.set(TalonSRXControlMode.PercentOutput, output);
         rightMotor.set(TalonSRXControlMode.PercentOutput, output);
     }
 
@@ -43,13 +45,15 @@ public class ArmSubsystem extends SubsystemBase {
     }
     
     public double getRightEncoderVal() {
+        //return rightMotor.getSelectedSensorPosition();
         return rightMotor.getSelectedSensorPosition();
+        //return rightMotor.getSelectedSensorPosition() - armEncoderOffset + 500; //500 is the start config for arm
     }
 
     @Override
     public void periodic() {
-        // SmartDashboard.putNumber("MagEncoder Left Value", leftMotor.getSelectedSensorPosition());
-        SmartDashboard.putNumber("MagEncoder Right Value", rightMotor.getSelectedSensorPosition());
+        SmartDashboard.putNumber("MagEncoder Left Value", getLeftEncoderVal());
+        //SmartDashboard.putNumber("MagEncoder Right Value", rightMotor.getSelectedSensorPosition());
     }
 
 }

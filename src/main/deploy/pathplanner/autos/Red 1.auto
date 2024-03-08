@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 15.48,
-      "y": 6.87
+      "x": 15.44,
+      "y": 6.55
     },
     "rotation": -60.0
   },
@@ -87,7 +87,19 @@
         {
           "type": "named",
           "data": {
-            "name": "ArmToIntake"
+            "name": "CenterAim1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CenterAim2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
           }
         },
         {

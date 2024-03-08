@@ -16,7 +16,7 @@ public class Aim extends Command {
     private PS4Controller joystick;
     double presetValue;
 
-    public PIDController pidController = new PIDController(0.025, 0.025, 0.0); // i cok iyi, range ekle sadece, ve arttir
+    public PIDController pidController=new PIDController(0.05,0.01,0.0); // i cok iyi, range ekle sadece, ve arttir
     boolean myInit = true;
 
     public Aim(ArmSubsystem armSubsystem, VisionSubsystem visionSubsystem, PS4Controller joystick) {
@@ -38,7 +38,7 @@ public class Aim extends Command {
     }
 
     public double customSigmoid(double input) { // -1/3 -> Questionable -> Emel kiziyo
-        double maxAngSpd = 1;
+        double maxAngSpd = 0.85;
         return ((2*maxAngSpd)/(1+Math.pow(Math.E,((double)-1.0)*(input))))-(maxAngSpd);
     }
 
@@ -46,7 +46,7 @@ public class Aim extends Command {
     public void execute() {
         if(myInit){reInit();}
         System.out.println("AIM COOMAND RUNNING");
-        armSubsystem.armSet(customSigmoid(pidController.calculate(armSubsystem.getRightEncoderVal())));
+        armSubsystem.armSet(customSigmoid(pidController.calculate(armSubsystem.getLeftEncoderVal())));
     }
 
     @Override
@@ -80,7 +80,11 @@ public class Aim extends Command {
 
     public double regressionPredict(double distance){
         //return (-36.8 * Math.pow(distance, 3) + 216.8 * Math.pow(distance, 2) - 299 * distance + 1105.6);
-        return 36.074 * Math.pow(distance,4) - 346.23 * Math.pow(distance,3) + 1152.4 * Math.pow(distance,2) - 1489.9 * distance + 1645.5;
+        //return (36.074 * Math.pow(distance,4) - 346.23 * Math.pow(distance,3) + 1152.4 * Math.pow(distance,2) - 1489.9 * distance + 1705.5) * 0.63;
+        //return (39.765 * Math.pow(distance,4) - 379.45 * Math.pow(distance,3) + 1274.2 * Math.pow(distance,2) - 1676 * Math.pow(distance,1) + 917.45) * 0.63;
+        //return (39.765 * Math.pow(distance,4) - 379.45 * Math.pow(distance,3) + 1274.2 * Math.pow(distance,2) - 1676 * Math.pow(distance,1) - 318.55);
+        return -36.445 * Math.pow(distance, 3) + 205.97 * Math.pow(distance, 2) - 297.89 * Math.pow(distance, 1) - 1093.5;
+
 
     }
 

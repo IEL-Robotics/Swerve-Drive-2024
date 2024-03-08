@@ -108,21 +108,27 @@ public class RobotContainer {
     NamedCommands.registerCommand("StopModules", new StopModules(SUBSYSTEM_SWERVEDRIVE));
     NamedCommands.registerCommand("ResetModulePosition", SUBSYSTEM_SWERVEDRIVE.zeroModuleAngles());
     NamedCommands.registerCommand("VisionStart", new VisionSetStart(SUBSYSTEM_VISION, SUBSYSTEM_SWERVEDRIVE));
-    NamedCommands.registerCommand("CenterAim1", CENTER_SPEAKER);
-    NamedCommands.registerCommand("CenterAim2", AIM);
-    NamedCommands.registerCommand("ArmToIntake", new PresetArm(SUBSYSTEM_ARM, 1020));
-    NamedCommands.registerCommand("ArmRaiseLittleBit", new PresetArm(SUBSYSTEM_ARM, 1300));
+    NamedCommands.registerCommand("CenterAim1", CENTER_SPEAKER.withTimeout(2));
+    NamedCommands.registerCommand("CenterAim2", AIM.withTimeout(2));
+    NamedCommands.registerCommand("ArmToIntake", new PresetArm(SUBSYSTEM_ARM, -1235).withTimeout(2));
+    NamedCommands.registerCommand("ArmRaiseLittleBit", new PresetArm(SUBSYSTEM_ARM, -1100).withTimeout(2));
     NamedCommands.registerCommand("IntakeStart", new IntakeStart(SUBSYSTEM_INTAKE));
     NamedCommands.registerCommand("IntakeStop", new IntakeStop(SUBSYSTEM_INTAKE));
     NamedCommands.registerCommand("ShooterChain", SHOOTER_CHAIN);
+    NamedCommands.registerCommand("ShooterStart", new ShooterStart(SUBSYSTEM_SHOOTER, 1));
+    NamedCommands.registerCommand("ShooterStop", new ShooterStop(SUBSYSTEM_SHOOTER));
+    NamedCommands.registerCommand("PistonOpen", PISTON_OPEN);
+    NamedCommands.registerCommand("PistonClose", PISTON_CLOSE);
+
 
     configureBindings();
   }
 
   private void configureBindings() {
 
-    new JoystickButton(JOYSTICK_DRIVER, 1).onTrue(new PresetArm(SUBSYSTEM_ARM, 995)); //Square - Intake
-    new JoystickButton(JOYSTICK_DRIVER, 2).onTrue(new PresetArm(SUBSYSTEM_ARM, 2220)); // Cross - Amplifier // R1 //umutcum preseti değiştirdim saygılar
+    //new JoystickButton(JOYSTICK_DRIVER, 1).onTrue(new PresetArm(SUBSYSTEM_ARM, 995)); //Square - Intake
+    new JoystickButton(JOYSTICK_DRIVER, 1).onTrue(new PresetArm(SUBSYSTEM_ARM, -1235)); 
+    new JoystickButton(JOYSTICK_DRIVER, 2).onTrue(new PresetArm(SUBSYSTEM_ARM, -470)); // Cross - Amplifier // R1 //umutcum preseti değiştirdim saygılar
     new JoystickButton(JOYSTICK_DRIVER, 10).onTrue(RESET_GYRO); // Options
     new JoystickButton(JOYSTICK_DRIVER, 4).onTrue(SHOOTER_CHAIN_WEAK);
     //new JoystickButton(JOYSTICK_DRIVER, 3).onTrue(CENTER_SPEAKER);
@@ -136,7 +142,6 @@ public class RobotContainer {
 
     new JoystickButton(JOYSTICK_COPILOT, 1).onTrue(PISTON_OPEN);
     new JoystickButton(JOYSTICK_COPILOT, 3).onTrue(PISTON_CLOSE);
-    new JoystickButton(JOYSTICK_COPILOT, 5).onTrue(new PresetArm(SUBSYSTEM_ARM, 1130));
     new JoystickButton(JOYSTICK_COPILOT, 7).whileTrue(INTAKE_OUT); // Faulty 
     new JoystickButton(JOYSTICK_COPILOT, 8).whileTrue(INTAKE_IN); // Faulty
 
