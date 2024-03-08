@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 15.83,
+      "x": 15.44,
       "y": 4.35
     },
     "rotation": 60.0
@@ -10,7 +10,99 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": []
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionStart"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CenterAim1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CenterAim2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShooterChain"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ArmToIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Red 3 Path 1"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Red 3 Path 2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeStart"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ArmRaiseLittleBit"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeStop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Red 3 Path 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CenterAim1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CenterAim2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShooterChain"
+          }
+        }
+      ]
     }
   },
   "folder": null,
