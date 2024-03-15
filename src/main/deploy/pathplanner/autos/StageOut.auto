@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 15.602491375922925,
+      "y": 4.326837143702777
+    },
+    "rotation": 60.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "ArmToIntake2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShooterChain"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StageOutPath"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

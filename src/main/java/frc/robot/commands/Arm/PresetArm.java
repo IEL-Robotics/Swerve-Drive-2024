@@ -1,5 +1,6 @@
 package frc.robot.commands.Arm;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
@@ -29,12 +30,12 @@ public class PresetArm extends Command {
 
     public void reInit() {
         pidController.setSetpoint(presetValue);
-        pidController.setTolerance(5, 5);
+        //pidController.setTolerance(10, 15);
         myInit = false;
     }
 
     public double customSigmoid(double input) { // -1/3 -> Questionable -> Emel kiziyo
-        double maxAngSpd = 1;
+        double maxAngSpd = 0.75;
         return ((2*maxAngSpd)/(1+Math.pow(Math.E,((double)-1.0)*(input))))-(maxAngSpd);
     }
 
@@ -42,8 +43,8 @@ public class PresetArm extends Command {
     public void execute() {
         System.out.println("ArmToPreset Running and Blocking");
         if(myInit){reInit();}
-        //armSubsystem.armSet(MathUtil.clamp(pidController.calculate(armSubsystem.getLeftEncoderVal()), -0.65, 0.65));
-        armSubsystem.armSet(customSigmoid(pidController.calculate(armSubsystem.getLeftEncoderVal())));
+        armSubsystem.armSet(MathUtil.clamp(pidController.calculate(armSubsystem.getLeftEncoderVal()), -0.75, 0.75));
+        //armSubsystem.armSet(customSigmoid(pidController.calculate(armSubsystem.getLeftEncoderVal())));
     }
 
     @Override
@@ -55,6 +56,7 @@ public class PresetArm extends Command {
 
     @Override
     public boolean isFinished() {
-        return pidController.atSetpoint();
+    return Math.abs(presetValue - armSubsystem.getLeftEncoderVal()) < 25; 
+    //        return pidController.atSetpoint()
     }
 }

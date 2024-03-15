@@ -41,7 +41,8 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getLeftEncoderVal() {
-        return leftMotor.getSelectedSensorPosition();
+        System.out.println(leftMotor.getSelectedSensorPosition());
+        return leftMotor.getSelectedSensorPosition();// +163;
     }
     
     public double getRightEncoderVal() {
@@ -52,7 +53,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("MagEncoder Left Value", getLeftEncoderVal());
+        SmartDashboard.putNumber("MagEncoder Left Value !!!", getLeftEncoderVal());
         //SmartDashboard.putNumber("MagEncoder Right Value", rightMotor.getSelectedSensorPosition());
     }
 

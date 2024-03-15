@@ -1,5 +1,6 @@
 package frc.robot.commands.Vision;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS4Controller;
@@ -33,7 +34,7 @@ public class Aim extends Command {
 
     public void reInit() {
         pidController.setSetpoint(loop());
-        pidController.setTolerance(5, 10);
+        pidController.setTolerance(10, 15);
         myInit = false;
     }
 
@@ -46,7 +47,8 @@ public class Aim extends Command {
     public void execute() {
         if(myInit){reInit();}
         System.out.println("AIM COOMAND RUNNING");
-        armSubsystem.armSet(customSigmoid(pidController.calculate(armSubsystem.getLeftEncoderVal())));
+        //armSubsystem.armSet(customSigmoid(pidController.calculate(armSubsystem.getLeftEncoderVal())));
+        armSubsystem.armSet(MathUtil.clamp(pidController.calculate(armSubsystem.getLeftEncoderVal()), -0.75, 0.75));
     }
 
     @Override
@@ -58,7 +60,8 @@ public class Aim extends Command {
 
     @Override
     public boolean isFinished() {
-        return pidController.atSetpoint() || joystickInterference();
+        //return pidController.atSetpoint() || joystickInterference();
+        return Math.abs(presetValue - armSubsystem.getLeftEncoderVal()) < 25 || joystickInterference();
     }
 
     public double loop() {

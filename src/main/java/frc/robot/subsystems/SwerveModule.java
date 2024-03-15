@@ -126,6 +126,8 @@ public class SwerveModule extends SubsystemBase {
 
     public void setAngle(SwerveModuleState state) {
         MOTOR_TURN.set(PID_TURNING.calculate(getTurningPosition(), state.angle.getRadians()));
+        SmartDashboard.putNumber(MODULE_NAME + " SetAngle", getTurningPosition());
+        //MOTOR_TURN.set(0);
     }
 
     public void setSpeed(SwerveModuleState state) {
@@ -191,6 +193,7 @@ public class SwerveModule extends SubsystemBase {
 
     public void sayacUpdate() {
       prevAbsPos = currentAbsPos;
+      SmartDashboard.putNumber(MODULE_NAME + "Enc", getAbsoluteEncoder());
       currentAbsPos = getAbsoluteEncoder() - OFFSET_ABSOLUTEENCODER;  
     }
     

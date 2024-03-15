@@ -82,15 +82,15 @@ public final class Constants {
     public static final double OFFSET_BACK_RIGHT_ENCODER_ABSOLUTE = -1.88758;//1.88506;
 
     // Robot drive speeds
-    public static final double LIMIT_HARD_SPEED_DRIVE = 4.5; // hard limit for speed of chassis
-    public static final double LIMIT_SOFT_SPEED_DRIVE = 3; //2.4 soft limit for speed of chassis
+    public static final double LIMIT_HARD_SPEED_DRIVE = 8; // hard limit for speed of chassis
+    public static final double LIMIT_SOFT_SPEED_DRIVE = 6.5; //2.4 soft limit for speed of chassis
 
     // Robot turning speeds
-    public static final double LIMIT_SOFT_SPEED_TURN = 1.5 * 2*Math.PI; // soft limit for module rotation
+    public static final double LIMIT_SOFT_SPEED_TURN = 2 * 2*Math.PI; // soft limit for module rotation
 
     // Robot acceleration
-    public static final double LIMIT_SOFT_ACCELERATION_SPEED = 1; //1 soft limit for acceleration (M/S^2)
-    public static final double LIMIT_SOFT_ACCELERATION_TURN = 1;  //1 soft limit for acceleration (M/S^2)
+    public static final double LIMIT_SOFT_ACCELERATION_SPEED = 2.25; //1 soft limit for acceleration (M/S^2)
+    public static final double LIMIT_SOFT_ACCELERATION_TURN = 1.5;  //1 soft limit for acceleration (M/S^2)
   }
 
   public static class ArmConstants{

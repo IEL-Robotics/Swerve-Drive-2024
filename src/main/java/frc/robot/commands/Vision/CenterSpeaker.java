@@ -17,7 +17,7 @@ public class CenterSpeaker extends Command {
   public PIDController pidController = new PIDController(0.15, 0.025, 0.005);
   ChassisSpeeds chassisSpeeds;
 
-  double output, desiredAngle, currentAngle, realDesiredAngle;
+  double output, currentAngle, realDesiredAngle;
   int kConstant;
   boolean myInit = true;
 
@@ -29,8 +29,6 @@ public class CenterSpeaker extends Command {
 
   @Override
   public void initialize() {
-    kConstant = (int) swerveSubsystem.getRobotHeadingEndless() / 360;
-    realDesiredAngle = (desiredAngle) + (360 * kConstant);
   }
 
   public double centerAngle() {
@@ -59,7 +57,7 @@ public class CenterSpeaker extends Command {
     output = MathUtil.clamp(pidController.calculate(currentAngle, realDesiredAngle),
         -1, 1);
 
-    chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, -output, swerveSubsystem.getRotation2d());
+    chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, -output, swerveSubsystem.getRotation2d()); //getRotation2d()
 
     // SwerveModuleState[] moduleStates = KinematicsConstants.KINEMATICS_DRIVE_CHASSIS.toSwerveModuleStates(chassisSpeeds);
 

@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 15.0,
+      "y": 5.55
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionStart"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CenterAim1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CenterAim2"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 15.766209538117081,
+      "y": 6.712444649960525
+    },
+    "rotation": -60.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "ArmToIntake2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ArmHigher"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShooterChain"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

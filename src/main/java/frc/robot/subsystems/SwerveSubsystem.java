@@ -209,7 +209,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Gyro", getRobotHeading());
         return Rotation2d.fromDegrees(getRobotHeading());
     }
-
+    
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         positions[0] = MODULE_FRONT_LEFT.getModulePosition();

@@ -18,7 +18,7 @@ public class LowerArm extends Command {
     @Override
     public void execute() {
         // -0.5 idi
-        armSubsystem.armSet(-0.8);
+        armSubsystem.armSet(-1);
     }
 
     @Override

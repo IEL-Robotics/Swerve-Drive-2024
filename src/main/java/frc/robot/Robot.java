@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -32,9 +33,6 @@ public class Robot extends TimedRobot {
 
   private final Compressor m_Compressor = new Compressor(PneumaticsModuleType.REVPH);
   private final PneumaticsControlModule m_Pcm = new PneumaticsControlModule();
-
-  public TalonSRX intakeMotor = new TalonSRX(13);
-  public RelativeEncoder intakeEncoder;
 
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
@@ -52,7 +50,8 @@ public class Robot extends TimedRobot {
     //camera = CameraServer.startAutomaticCapture();
     //camera.setResolution(640, 480);
     m_Pcm.enableCompressorDigital();
-    m_Compressor.enableDigital();
+    //m_Compressor.enableDigital();
+    m_Compressor.disable();
     m_robotContainer = new RobotContainer();
   }
 
@@ -105,6 +104,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    Commands.runOnce(()-> m_robotContainer.SUBSYSTEM_INTAKE.stopMotors(), m_robotContainer.SUBSYSTEM_INTAKE);
   }
 
   /** This function is called periodically during operator control. */
