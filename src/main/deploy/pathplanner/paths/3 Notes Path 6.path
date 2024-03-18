@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 15.602491375922925,
-        "y": 4.326837143702777
+        "x": 14.3,
+        "y": 4.1
       },
       "prevControl": null,
       "nextControl": {
-        "x": 15.191969184166288,
-        "y": 3.543554248646959
+        "x": 15.3,
+        "y": 4.1
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 15.216584279322404,
-        "y": 2.385607506257749
+        "x": 15.0,
+        "y": 5.55
       },
       "prevControl": {
-        "x": 15.585272788223639,
-        "y": 2.6648008099613074
-      },
-      "nextControl": {
-        "x": 14.847895770421172,
-        "y": 2.1064142025541903
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 12.795894309737339,
-        "y": 1.4617693053049925
-      },
-      "prevControl": {
-        "x": 13.39868527600303,
-        "y": 1.8006001937929803
+        "x": 14.0,
+        "y": 5.55
       },
       "nextControl": null,
       "isLocked": false,
@@ -59,9 +43,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Playoff Bosphorus",
+  "folder": "3 Notes",
   "previewStartingState": {
-    "rotation": 60.0,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true

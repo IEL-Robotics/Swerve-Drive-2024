@@ -95,10 +95,7 @@ public class SwerveModule extends SubsystemBase {
         coefficient = 0;
     }
 
-    public void moduleData2Dashboard(){
-        //SmartDashboard.putNumber(String.format("%s AbsPos", MODULE_NAME), Math.toDegrees(getTurningPosition()));
-        //SmartDashboard.putNumber(MODULE_NAME + " Encoder",getDrivePosition());
-    }
+    public void moduleData2Dashboard(){}
 
     public boolean checkIdle() {
         return (getDriveVelocity() != 0.0) && (getTurningVelocity() != 0.0);
@@ -110,7 +107,6 @@ public class SwerveModule extends SubsystemBase {
     }
     
     public void resetDriveEncoders(){
-        System.out.println("AA");
         ENCODER_DRIVE.setPosition(0.0);
     }
 
@@ -120,13 +116,10 @@ public class SwerveModule extends SubsystemBase {
 
         if(isOpenLoop){setPercentOutput(state);}
         else{setSpeed(state);}
-
-        //SmartDashboard.putString(MODULE_NAME + " State", state.toString());
     }
 
     public void setAngle(SwerveModuleState state) {
         MOTOR_TURN.set(PID_TURNING.calculate(getTurningPosition(), state.angle.getRadians()));
-        SmartDashboard.putNumber(MODULE_NAME + " SetAngle", getTurningPosition());
         //MOTOR_TURN.set(0);
     }
 
@@ -193,7 +186,6 @@ public class SwerveModule extends SubsystemBase {
 
     public void sayacUpdate() {
       prevAbsPos = currentAbsPos;
-      SmartDashboard.putNumber(MODULE_NAME + "Enc", getAbsoluteEncoder());
       currentAbsPos = getAbsoluteEncoder() - OFFSET_ABSOLUTEENCODER;  
     }
     

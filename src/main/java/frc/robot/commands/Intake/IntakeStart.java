@@ -20,7 +20,7 @@ public class IntakeStart extends Command {
 
     @Override
     public void execute() {
-        intakeSubsystem.runMotorsInverted();
+        intakeSubsystem.runMotors();
     }
 
     @Override

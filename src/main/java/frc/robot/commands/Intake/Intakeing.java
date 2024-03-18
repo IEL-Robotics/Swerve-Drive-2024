@@ -21,6 +21,7 @@ public class Intakeing extends Command {
     @Override
     public void execute() {
         intakeSubsystem.runMotors();
+        System.out.println("Intakeing");
     }
 
     @Override

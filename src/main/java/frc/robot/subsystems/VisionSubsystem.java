@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.print.attribute.standard.MediaSize.NA;
 
+import org.opencv.core.Mat;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -31,13 +32,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
-    private PhotonCamera camera = new PhotonCamera("MyCamera");
+    private PhotonCamera camera = new PhotonCamera("BRIO_4K_Stream_Edition");
 
     private AprilTagFieldLayout aprilTagFieldLayout;
      
     //private Transform3d camera2Robot= new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0));
-    //private Transform3d camera2Robot= new Transform3d(new Translation3d(-0.35, -0.25, 0.29), new Rotation3d(Math.toRadians(0), Math.toRadians(-45.6), Math.toRadians(0)));
-    private Transform3d camera2Robot= new Transform3d(new Translation3d(-0.35, -0.25, 0), new Rotation3d(Math.toRadians(-3.07), Math.toRadians(-38.34), Math.toRadians(-12.26)));
+    private Transform3d camera2Robot= new Transform3d(new Translation3d(-0.0, -0.0, 0.0), new Rotation3d(Math.toRadians(1.08), Math.toRadians(-35.2), Math.toRadians(159.06)));
+    //private Transform3d camera2Robot= new Transform3d(new Translation3d(-0.35, -0.27, 0.0), new Rotation3d(Math.toRadians(1.08), Math.toRadians(-35.2), Math.toRadians(159.06)));
     private PhotonPipelineResult result;
     private PhotonTrackedTarget target;
     private Pose3d robotPose;
@@ -73,8 +74,6 @@ public class VisionSubsystem extends SubsystemBase {
             if(target.getFiducialId() != -1){
                     robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
                         aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(Math.toRadians(0), Math.toRadians(0), Math.toRadians(0))));
-
-                        SmartDashboard.putString("RobotPose of Cam DEBUG", robotPose.toString());
             }
         }
     }
@@ -88,19 +87,23 @@ public class VisionSubsystem extends SubsystemBase {
                 robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
                         aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), camera2Robot);
                 
-                //SmartDashboard.putNumber("ALLAM", (target.getBestCameraToTarget().getRotation().getAngle() * 180.0/Math.PI)-180);
-
                 x = robotPose.getX();
                 y = robotPose.getY();
                 //angle = Math.toDegrees(robotPose.getRotation().getAngle());
 
-                angle = getAngleViaId((target.getBestCameraToTarget().getRotation().getAngle() * 180.0/Math.PI) + 8, target.getFiducialId());
+                SmartDashboard.putString("RobotPose", robotPose.toString());
+
+                angle = getAngleViaId((target.getBestCameraToTarget().getRotation().getAngle() * 180.0/Math.PI) - 24 + 43, target.getFiducialId());
                 SmartDashboard.putNumber("AprilTag ID:", target.getFiducialId());
 
                 SmartDashboard.putNumber("X for Camera", x);
                 SmartDashboard.putNumber("Y for Camera", y);
                 SmartDashboard.putNumber("Angle for Calculation", angle);
-                //SmartDashboard.putNumber("Angle for Camera", target.getYaw());
+
+                double xFactor = Math.abs(-0.35 * Math.cos(Math.toRadians(angle)) + -0.27 * Math.sin(Math.toRadians(angle)));
+                double yFactor = Math.abs(-0.35 * Math.sin(Math.toRadians(angle)) + -0.27 * Math.cos(Math.toRadians(angle)));
+                x -= DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? xFactor : -xFactor;
+                y -= DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? yFactor : -yFactor;
             }
         }
 
@@ -139,11 +142,8 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public double centerAngle(double xIn, double yIn) {
-        System.out.println(xIn + " " + yIn);
         double xDistance = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? xIn - (-0.04) : 16.58 - xIn;
         double yDistance = yIn - 5.55;
-        System.out.println(xDistance);
-        System.out.println(yDistance);
         SmartDashboard.putNumber("ATAN2", Math.toDegrees(Math.atan2(yDistance, xDistance)));
         return -Math.toDegrees(Math.atan2(yDistance, xDistance)); 
     }

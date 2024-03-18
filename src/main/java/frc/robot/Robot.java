@@ -4,16 +4,8 @@
 
 package frc.robot;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -34,6 +26,8 @@ public class Robot extends TimedRobot {
   private final Compressor m_Compressor = new Compressor(PneumaticsModuleType.REVPH);
   private final PneumaticsControlModule m_Pcm = new PneumaticsControlModule();
 
+  //private final AnalogInput analog = new AnalogInput(0);
+
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
 
@@ -49,7 +43,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     //camera = CameraServer.startAutomaticCapture();
     //camera.setResolution(640, 480);
-    m_Pcm.enableCompressorDigital();
+    //m_Pcm.enableCompressorDigital();
     //m_Compressor.enableDigital();
     m_Compressor.disable();
     m_robotContainer = new RobotContainer();
@@ -103,8 +97,10 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
-    }
+    } 
     Commands.runOnce(()-> m_robotContainer.SUBSYSTEM_INTAKE.stopMotors(), m_robotContainer.SUBSYSTEM_INTAKE);
+
+    //analog.setAverageBits(8);
   }
 
   /** This function is called periodically during operator control. */
@@ -112,9 +108,13 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     m_robotContainer.SUBSYSTEM_SWERVEDRIVE.updateSayac();
     m_robotContainer.SUBSYSTEM_VISION.getFieldPosition();
-    SmartDashboard.putNumber("Center Meters Left",m_robotContainer.SUBSYSTEM_VISION.centerTag());
-    // m_robotContainer.SUBSYSTEM_VISION.getFieldPosition();
-    // m_robotContainer.SUBSYSTEM_VISION.getFieldPosition2();
+
+    //System.out.println("Analog Voltage " + analog.getVoltage());
+
+    //SmartDashboard.putNumber("Analog 1 PIN", analog.getValue());
+    //SmartDashboard.putNumber("Analog 1 Volt", analog.getVoltage());
+
+    //System.out.println("Comp On: " + m_Pcm.getCompressor());
   }
 
   @Override

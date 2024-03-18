@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
@@ -14,8 +15,7 @@ public class ArmSubsystem extends SubsystemBase {
     public TalonSRX leftMotor,rightMotor;
     public PIDController leftPID, rightPID;
 
-    public double armEncoderVariable = 0;
-    public double armEncoderOffset = 0;
+    public AnalogInput potentiometer = new AnalogInput(0);
 
     public ArmSubsystem() {
         leftMotor = new TalonSRX(ArmConstants.ID_LEFT_ARM);
@@ -26,13 +26,10 @@ public class ArmSubsystem extends SubsystemBase {
         leftMotor.setInverted(true);
         rightMotor.setInverted(false);
 
-        leftMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-        rightMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-
         leftPID = new PIDController(0, 0, 0);
         rightPID = new PIDController(0, 0, 0);
 
-        armEncoderOffset =leftMotor.getSelectedSensorPosition();
+        potentiometer.setAverageBits(8);
     }
 
     public void armSet(double output) {
@@ -40,21 +37,21 @@ public class ArmSubsystem extends SubsystemBase {
         rightMotor.set(TalonSRXControlMode.PercentOutput, output);
     }
 
-    public double getLeftEncoderVal() {
-        System.out.println(leftMotor.getSelectedSensorPosition());
-        return leftMotor.getSelectedSensorPosition();// +163;
-    }
+    // public double getLeftEncoderVal() {
+    //     return leftMotor.getSelectedSensorPosition();
+    // }
     
-    public double getRightEncoderVal() {
-        //return rightMotor.getSelectedSensorPosition();
-        return rightMotor.getSelectedSensorPosition();
-        //return rightMotor.getSelectedSensorPosition() - armEncoderOffset + 500; //500 is the start config for arm
+    // public double getRightEncoderVal() {
+    //     return rightMotor.getSelectedSensorPosition();
+    // }
+
+    public double getPotentiometerVoltage() {
+        return potentiometer.getAverageVoltage();
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("MagEncoder Left Value !!!", getLeftEncoderVal());
-        //SmartDashboard.putNumber("MagEncoder Right Value", rightMotor.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Potentiometer Voltage Out", getPotentiometerVoltage());
     }
 
 }

@@ -8,7 +8,6 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 //import edu.wpi.first.math.filter.SlewRateLimiter;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveSubsystemConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -70,10 +69,6 @@ public class SwerveDrive extends Command {
         ySpeed = yLimiter.calculate(ySpeed) * SwerveSubsystemConstants.LIMIT_SOFT_SPEED_DRIVE;
         rotSpeed = zLimiter.calculate(rotSpeed) * SwerveSubsystemConstants.LIMIT_SOFT_SPEED_TURN;
 
-        //subsystem.updateSayac();
-        // SmartDashboard.putNumber("xSpeed", xSpeed);
-        // SmartDashboard.putNumber("ySpeed", ySpeed);
-        // SmartDashboard.putNumber("rotSpeed", rotSpeed);
         if(!(SUPPPLIER_fieldOriented.getAsBoolean())){
             ChassisSpeeds chassisSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotSpeed, subsystem.getRotation2d());
             subsystem.setChassisSpeed(chassisSpeed,true);

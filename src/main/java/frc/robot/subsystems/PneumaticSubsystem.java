@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class PneumaticSubsystem {
 
-    private final DoubleSolenoid shootSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
+    private final DoubleSolenoid shootSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 9, 8);
 
     public PneumaticSubsystem() {
         shootSolenoid.set(Value.kOff);

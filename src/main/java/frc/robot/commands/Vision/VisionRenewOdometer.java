@@ -7,13 +7,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
-public class VisionSetStart extends Command {
+public class VisionRenewOdometer extends Command {
     
     VisionSubsystem visionSubsystem;
     SwerveSubsystem swerveSubsystem;
     double degree;
 
-    public VisionSetStart(VisionSubsystem visionSubsystem, SwerveSubsystem swerveSubsystem){
+    public VisionRenewOdometer(VisionSubsystem visionSubsystem, SwerveSubsystem swerveSubsystem){
         this.swerveSubsystem = swerveSubsystem;
         this.visionSubsystem = visionSubsystem;
         addRequirements(visionSubsystem);
@@ -28,7 +28,6 @@ public class VisionSetStart extends Command {
         double[] positions = visionSubsystem.getFieldPosition();
         if(visionSubsystem.gotDataIndeed()){
             swerveSubsystem.resetOdometer(new Pose2d(new Translation2d(positions[0], positions[1]), new Rotation2d(Math.toRadians(positions[2]))));
-            swerveSubsystem.setStartAngleViaVision(positions[2]); // a renew command without this maybe?
         }
     }
 

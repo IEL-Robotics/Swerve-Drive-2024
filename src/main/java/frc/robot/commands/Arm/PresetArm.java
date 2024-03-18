@@ -13,14 +13,14 @@ public class PresetArm extends Command {
     //public PIDController pidController = new PIDController(0.05, 0.015, 0.0); // i cok iyi, range ekle sadece, ve arttir
                                                   
    
-    public PIDController pidController=new PIDController(0.05,0.01,0.0); // imetin pid
+    public PIDController pidController=new PIDController(5,1,0.0); // imetin pid
     //public PIDController pidController=new PIDController(0.05,0.015 ,0.004); //ben pid
     boolean myInit = true;
 
     public PresetArm(ArmSubsystem armSubsystem, double presetValue) {
         this.armSubsystem = armSubsystem;
         this.presetValue = presetValue;
-        pidController.setIZone(20);
+        pidController.setIZone(0.2);
         addRequirements(armSubsystem);
     }
 
@@ -41,10 +41,10 @@ public class PresetArm extends Command {
 
     @Override
     public void execute() {
-        System.out.println("ArmToPreset Running and Blocking");
+        //System.out.println("ArmToPreset Blocking, Output: " + pidController.calculate(armSubsystem.getPotentiometerVoltage()));
         if(myInit){reInit();}
-        armSubsystem.armSet(MathUtil.clamp(pidController.calculate(armSubsystem.getLeftEncoderVal()), -0.75, 0.75));
-        //armSubsystem.armSet(customSigmoid(pidController.calculate(armSubsystem.getLeftEncoderVal())));
+        armSubsystem.armSet(-MathUtil.clamp(pidController.calculate(armSubsystem.getPotentiometerVoltage()), -1, 1));
+        //armSubsystem.armSet(customSigmoid(pidController.calculate(armSubsystem.getPotentiometerVoltage())));
     }
 
     @Override
@@ -56,7 +56,8 @@ public class PresetArm extends Command {
 
     @Override
     public boolean isFinished() {
-    return Math.abs(presetValue - armSubsystem.getLeftEncoderVal()) < 25; 
-    //        return pidController.atSetpoint()
+    System.out.println("Error is " + Math.abs(presetValue - armSubsystem.getPotentiometerVoltage()));
+    return Math.abs(presetValue - armSubsystem.getPotentiometerVoltage()) < 0.01; 
+    //return pidController.atSetpoint()
     }
 }

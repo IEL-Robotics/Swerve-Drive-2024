@@ -57,7 +57,7 @@ public class CenterSpeaker extends Command {
     output = MathUtil.clamp(pidController.calculate(currentAngle, realDesiredAngle),
         -1, 1);
 
-    chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, -output, swerveSubsystem.getRotation2d()); //getRotation2d()
+    chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 2* -output, swerveSubsystem.getRotation2d()); //getRotation2d()
 
     // SwerveModuleState[] moduleStates = KinematicsConstants.KINEMATICS_DRIVE_CHASSIS.toSwerveModuleStates(chassisSpeeds);
 

@@ -21,6 +21,7 @@ public class IntakeOut extends Command {
     @Override
     public void execute() {
         intakeSubsystem.runMotorsInverted();
+        System.out.println("IntakeOut");
     }
 
     @Override

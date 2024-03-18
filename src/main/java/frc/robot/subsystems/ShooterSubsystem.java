@@ -40,14 +40,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {
-        SmartDashboard.putNumber("LeftRPM", leftEncoder.getVelocity());
-        SmartDashboard.putNumber("RightRPM", rightEncoder.getVelocity());
-        if(leftEncoder.getVelocity() > 3500){
-            //System.out.println("Current: "+ pdp.getCurrent(0));
-            //System.out.println(leftEncoder.getVelocity()+ " & " + rightEncoder.getVelocity());
-        }
-    }
+    public void periodic() {}
 
     public double[] debug() {
         SmartDashboard.putNumber("LeftRPM", leftEncoder.getVelocity());

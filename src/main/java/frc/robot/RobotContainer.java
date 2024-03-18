@@ -1,26 +1,14 @@
 package frc.robot;
 
-import java.lang.module.ModuleDescriptor.Requires;
-
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PS4Controller;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Debug;
-import frc.robot.commands.Delay;
 import frc.robot.commands.Arm.LowerArm;
 import frc.robot.commands.Arm.PresetArm;
 import frc.robot.commands.Arm.RaiseArm;
@@ -41,8 +29,7 @@ import frc.robot.commands.Swerve.StopModules;
 import frc.robot.commands.Swerve.SwerveDrive;
 import frc.robot.commands.Vision.Aim;
 import frc.robot.commands.Vision.CenterSpeaker;
-import frc.robot.commands.Vision.ExperimentalSetStart;
-import frc.robot.commands.Vision.PathAndShootCmd;
+import frc.robot.commands.Vision.VisionRenewOdometer;
 import frc.robot.commands.Vision.VisionSetStart;
 //import frc.robot.commands.Vision.VisionSetStart;
 import frc.robot.subsystems.ArmSubsystem;
@@ -93,8 +80,6 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    //SmartDashboard.putData(SUBSYSTEM_SWERVEDRIVE);
-
     SUBSYSTEM_SWERVEDRIVE.setDefaultCommand(
         new SwerveDrive(
             SUBSYSTEM_SWERVEDRIVE,
@@ -109,13 +94,14 @@ public class RobotContainer {
     NamedCommands.registerCommand("Debug", new Debug());
     NamedCommands.registerCommand("StopModules", new StopModules(SUBSYSTEM_SWERVEDRIVE));
     NamedCommands.registerCommand("ResetModulePosition", SUBSYSTEM_SWERVEDRIVE.zeroModuleAngles());
-    NamedCommands.registerCommand("VisionStart", new VisionSetStart(SUBSYSTEM_VISION, SUBSYSTEM_SWERVEDRIVE).withTimeout(2));
+    NamedCommands.registerCommand("VisionStart", new VisionSetStart(SUBSYSTEM_VISION, SUBSYSTEM_SWERVEDRIVE).withTimeout(1));
+    NamedCommands.registerCommand("VisionRenew", new VisionRenewOdometer(SUBSYSTEM_VISION, SUBSYSTEM_SWERVEDRIVE).withTimeout(1));
     NamedCommands.registerCommand("CenterAim1", new CenterSpeaker(SUBSYSTEM_SWERVEDRIVE, SUBSYSTEM_VISION).withTimeout(2.5));
-    NamedCommands.registerCommand("CenterAim2", new Aim(SUBSYSTEM_ARM, SUBSYSTEM_VISION, JOYSTICK_COPILOT).withTimeout(2.5));
-    NamedCommands.registerCommand("ArmToIntake", new PresetArm(SUBSYSTEM_ARM, -1235).withTimeout(2));
+    NamedCommands.registerCommand("CenterAim2", new Aim(SUBSYSTEM_ARM, SUBSYSTEM_VISION, JOYSTICK_COPILOT).withTimeout(1));
+    NamedCommands.registerCommand("ArmToIntake", new PresetArm(SUBSYSTEM_ARM, 2.5).withTimeout(2));
     NamedCommands.registerCommand("ArmToIntake2", new LowerArm(SUBSYSTEM_ARM).withTimeout(1.75));
     NamedCommands.registerCommand("ArmHigher", new RaiseArm(SUBSYSTEM_ARM).withTimeout(0.6));
-    NamedCommands.registerCommand("ArmRaiseLittleBit", new PresetArm(SUBSYSTEM_ARM, -1100).withTimeout(2));
+    NamedCommands.registerCommand("ArmRaiseLittleBit", new PresetArm(SUBSYSTEM_ARM, 2.35).withTimeout(2));
     NamedCommands.registerCommand("IntakeStart", new IntakeStart(SUBSYSTEM_INTAKE));
     NamedCommands.registerCommand("IntakeStop", new IntakeStop(SUBSYSTEM_INTAKE));
     NamedCommands.registerCommand("ShooterChain", SHOOTER_CHAIN);
@@ -131,10 +117,10 @@ public class RobotContainer {
   private void configureBindings() {
 
     //new JoystickButton(JOYSTICK_DRIVER, 1).onTrue(new PresetArm(SUBSYSTEM_ARM, 995)); //Square - Intake
-    new JoystickButton(JOYSTICK_DRIVER, 1).onTrue(new PresetArm(SUBSYSTEM_ARM, -1235)); 
-    new JoystickButton(JOYSTICK_DRIVER, 2).onTrue(new PresetArm(SUBSYSTEM_ARM, -520)); // Cross - Amplifier // R1 //umutcum preseti değiştirdim saygılar
-    //new JoystickButton(JOYSTICK_DRIVER, 3).onTrue(new SequentialCommandGroup(CENTER_SPEAKER, AIM));
-    new JoystickButton(JOYSTICK_DRIVER, 3).onTrue(AIM); 
+    new JoystickButton(JOYSTICK_DRIVER, 1).onTrue(new PresetArm(SUBSYSTEM_ARM, 2.49)); 
+    new JoystickButton(JOYSTICK_DRIVER, 2).onTrue(new PresetArm(SUBSYSTEM_ARM, 1.98)); // Cross - Amplifier // R1 //umutcum preseti değiştirdim saygılar
+    new JoystickButton(JOYSTICK_DRIVER, 3).onTrue(new ParallelCommandGroup(CENTER_SPEAKER, AIM));
+    //new JoystickButton(JOYSTICK_DRIVER, 3).onTrue(AIM); 
     new JoystickButton(JOYSTICK_DRIVER, 4).onTrue(SHOOTER_CHAIN_WEAK);
     new JoystickButton(JOYSTICK_DRIVER, 5).whileTrue(LOWER_ARM);
     new JoystickButton(JOYSTICK_DRIVER, 6).whileTrue(RAISE_ARM);
@@ -150,14 +136,13 @@ public class RobotContainer {
     new JoystickButton(JOYSTICK_COPILOT, 4).onTrue(new IntakeStop(SUBSYSTEM_INTAKE));
     new JoystickButton(JOYSTICK_COPILOT, 5).whileTrue(new Shoot(SUBSYSTEM_SHOOTER));
     new JoystickButton(JOYSTICK_COPILOT, 6).onTrue(new ShooterStop(SUBSYSTEM_SHOOTER));
-    new JoystickButton(JOYSTICK_COPILOT, 7).whileTrue(INTAKE_OUT); // Faulty 
-    new JoystickButton(JOYSTICK_COPILOT, 8).whileTrue(INTAKE_IN); // Faulty
+    new JoystickButton(JOYSTICK_COPILOT, 7).whileTrue(INTAKE_IN); // Faulty 
+    new JoystickButton(JOYSTICK_COPILOT, 8).whileTrue(INTAKE_OUT); // Faulty
 
   }
 
   public Command getAutonomousCommand() {
-    //if(SmartDashboard.getNumber(null, 0))
-    return new PathPlannerAuto("PlayoffAuto"); // ?
+    return new PathPlannerAuto("3 Notes"); // Renew Odometer X Y gibi bi command?
 
     // PathPlannerPath path1 = PathPlannerPath.fromPathFile("Example Path");
     // PathPlannerPath path2 = PathPlannerPath.fromPathFile("Example Path
